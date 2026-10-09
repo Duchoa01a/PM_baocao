@@ -1,24 +1,31 @@
 # Phần mềm báo cáo
 **Trung tâm GDNN & SHLX Kim Thành**
 
-Phần mềm hỗ trợ xử lý dữ liệu báo cáo cabin và tra cứu thông tin khóa học lái xe.
+Phần mềm hỗ trợ xử lý dữ liệu báo cáo cabin, tra cứu thông tin khóa học và tổng hợp nhiều lớp đào tạo lái xe.
 
 ---
 
-## 🌟 Chức năng chính
+## 🌟 3 Chức năng chính
 
-### 1. Báo cáo (Gộp Cabin Viettel & Ecotek)
+### 1. 📊 Báo cáo (Gộp Cabin Viettel & Ecotek)
 - Tải file báo cáo cabin Viettel và Ecotek của cùng một khóa.
 - Tự động đối chiếu theo mã học viên, họ tên và ngày sinh.
 - Kiểm tra điều kiện đáp ứng, cập nhật số liệu và gán nhãn loại Cabin.
 - Bộ lọc thông minh theo loại Cabin (Viettel, Ecotek, Chưa đáp ứng) và tìm kiếm học viên.
 - Xuất báo cáo hoàn chỉnh ra file Excel theo đúng định dạng mẫu.
 
-### 2. Thông tin khóa học
-- Tải file danh sách khóa học bất kỳ (`.xlsx`, `.xls`, `.csv`).
+### 2. 🎓 Thông tin khóa học
+- Tải file danh sách khóa học bất kỳ (`.xlsx`, `.xls`, `.csv`) để xem và tra cứu độc lập từng file.
 - Tự động nhận diện mã khóa học, tổng số học viên và các cột dữ liệu.
 - Tìm kiếm tức thì theo bất kỳ thông tin nào (Họ tên, CCCD/CMND, Mã HV, Ngày sinh, v.v.).
 - Xuất danh sách học viên trong khóa ra file Excel.
+
+### 3. 📑 Báo cáo tổng (Gộp & cập nhật nhiều lớp)
+- Nạp nhiều file Excel lớp/khóa cùng lúc hoặc nạp lần lượt từng file.
+- Tự động **cộng dồn nối tiếp học viên** vào danh sách tổng hợp duy nhất.
+- **Tự động nhận diện học viên cũ:** Nếu nạp lại file của lớp đã có, phần mềm sẽ **cập nhật thông tin mới nhất** mà không bị nhân đôi (duplicate) dòng.
+- Tự động đánh lại STT chuẩn liên tục từ `1` đến `Tổng số học viên`.
+- Xuất toàn bộ danh sách gộp của tất cả các lớp ra **1 file Excel Báo cáo tổng**.
 
 ---
 

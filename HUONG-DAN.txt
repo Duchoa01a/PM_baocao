@@ -4,9 +4,10 @@ Trung tâm GDNN&SHLX Kim Thành
 CÁCH DÙNG
 1. Giải nén toàn bộ file .zip ra một thư mục (ví dụ D:\PhanMemBaoCao). Không chạy trực tiếp trong file zip.
 2. Bấm đúp PhanMemBaoCao.exe để mở. Không cần cài đặt, không cần mạng.
-3. Ứng dụng gồm 2 chức năng chính:
-   - Chức năng 1 (Báo cáo): Tải báo cáo Viettel và Ecotek lên để gộp dữ liệu cabin, lọc, tìm kiếm và xuất Excel theo mẫu.
-   - Chức năng 2 (Thông tin khóa học): Tải file Excel khóa học lên để tra cứu thông tin học viên, tìm kiếm và xuất danh sách Excel.
+3. Ứng dụng gồm 3 chức năng chính:
+   - Chức năng 1 (Báo cáo hết khóa): Tải báo cáo Viettel và Ecotek lên để gộp dữ liệu cabin, kiểm tra đáp ứng, lọc, tìm kiếm và xuất Excel theo mẫu.
+   - Chức năng 2 (Thông tin khóa học): Tải từng file Excel khóa học/lớp lên để tra cứu nhanh thông tin học viên.
+   - Chức năng 3 (Báo cáo tổng): Nạp nhiều file Excel lớp khác nhau để tự động cộng dồn vào danh sách tổng (nếu nạp lại file cũ sẽ tự động cập nhật thông tin học viên, không nhân đôi dòng) và xuất ra file Excel Báo cáo tổng hợp.
 
 LƯU Ý
 - Không tách riêng file .exe ra khỏi thư mục, vì exe cần các file đi kèm. Muốn mở nhanh thì chuột phải vào PhanMemBaoCao.exe, chọn "Gửi tới > Desktop (tạo lối tắt)".
