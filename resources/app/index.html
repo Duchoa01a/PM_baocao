@@ -252,7 +252,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
           <input type="file" id="fc" accept=".xlsx,.xls,.csv" multiple>
           <div class="icon">📁</div>
           <b id="course-drop-title">Tải hoặc thêm file Excel các lớp</b>
-          <span id="tc">Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động cộng dồn học viên vào danh sách chung</span>
+          <span id="tc">Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động cộng dồn hoặc cập nhật học viên vào danh sách chung</span>
         </label>
       </div>
       <div class="msg" id="msg-course" role="status"></div>
@@ -439,7 +439,7 @@ async function saveFile(blob,name){
 }
 $('exp').addEventListener('click',async function(){
   if(!RES.length||!vBuf)return;
-  if(typeof ExcelJS==='undefined'){msgReport('Không tải được thư viện xuất Excel. Kiểm tra mạng và thư lại.',false);return}
+  if(typeof ExcelJS==='undefined'){msgReport('Không tải được thư viện xuất Excel. Kiểm tra mạng và thử lại.',false);return}
   try{
     var wb=new ExcelJS.Workbook();await wb.xlsx.load(vBuf);
     var ws=wb.worksheets[0],hr=0,cT=0,cN=0,cS=0,cC=0,lastC=0,cI=0;
@@ -469,18 +469,51 @@ $('exp').addEventListener('click',async function(){
 
 
 /* =========================================================
-   TAB 2: THÔNG TIN KHÓA HỌC (TỰ ĐỘNG GỘP NHIỀU LỚP/FILE)
+   TAB 2: THÔNG TIN KHÓA HỌC (TỰ ĐỘNG GỘP & CẬP NHẬT DỮ LIỆU)
    ========================================================= */
 var courseStore = {
   courses: [],
-  files: [],      // [{ name: 'Lop1.xlsx', count: 35, course: '...' }]
-  headers: [],    // ['STT', 'Họ và tên', 'Mã HV', ...]
-  rows: [],       // [ ['1', 'Nguyen Van A', ...], ...]
-  studentKeys: {} // để kiểm tra tránh trùng lặp nếu cần
+  files: [],         // [{ name: 'Lop1.xlsx', count: 35, course: '...' }]
+  headers: [],       // ['STT', 'Họ và tên', 'Mã HV', ...]
+  rows: [],          // [ ['1', 'Nguyen Van A', ...], ...]
+  studentKeyMap: {}  // { 'key': rowIndex } để cập nhật học viên cũ, tránh nhân đôi
 };
 var courseSearchTerm = '';
 
 function msgCourse(t,ok){var m=$('msg-course');m.textContent=t;m.className='msg show '+(ok?'ok':'err')}
+
+/* Trích xuất khóa nhận dạng duy nhất cho từng học viên */
+function getStudentKey(row, headers){
+  var id = '', name = '', dob = '', cccd = '';
+  headers.forEach(function(h, idx){
+    var nh = norm(h);
+    var val = String(row[idx]||'').trim();
+    if(!val) return;
+    if(/mã\s*hv|mã\s*học\s*viên|student\s*id/i.test(nh)){
+      id = val;
+    } else if(/cccd|cmnd|căn\s*cước|chứng\s*minh/i.test(nh)){
+      cccd = val;
+    } else if(/họ\s*tên|họ\s*và\s*tên|tên\s*học\s*viên/i.test(nh)){
+      name = norm(val);
+    } else if(/ngày\s*sinh|năm\s*sinh|dob/i.test(nh)){
+      dob = norm(val);
+    }
+  });
+
+  if(id && (ID.test(id) || id.length >= 4)){
+    return 'id:' + id;
+  }
+  if(cccd && cccd.length >= 9){
+    return 'cccd:' + cccd;
+  }
+  if(name && dob){
+    return 'namedob:' + name + '|' + dob;
+  }
+  if(name){
+    return 'name:' + name;
+  }
+  return '';
+}
 
 function bindCourseDrop(){
   var inp = $('fc'), box = $('dc');
@@ -519,11 +552,11 @@ function bindCourseDrop(){
 bindCourseDrop();
 
 function resetCourseStore(){
-  courseStore = {courses: [], files: [], headers: [], rows: [], studentKeys: {}};
+  courseStore = {courses: [], files: [], headers: [], rows: [], studentKeyMap: {}};
   courseSearchTerm = '';
   if($('course-search')) $('course-search').value = '';
   $('dc').classList.remove('ready');
-  $('tc').textContent = 'Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động cộng dồn học viên vào danh sách chung';
+  $('tc').textContent = 'Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động cộng dồn hoặc cập nhật học viên vào danh sách chung';
   $('course-res').style.display = 'none';
   msgCourse('Đã làm mới danh sách.', true);
 }
@@ -541,12 +574,15 @@ async function loadMultipleCourseFiles(files){
   }
 
   var totalAdded = 0;
+  var totalUpdated = 0;
+
   for(var i = 0; i < validFiles.length; i++){
     var f = validFiles[i];
     $('tc').textContent = 'Đang xử lý (' + (i + 1) + '/' + validFiles.length + '): ' + f.name + '...';
     try {
-      var added = await processSingleCourseFile(f);
-      totalAdded += added;
+      var res = await processSingleCourseFile(f);
+      totalAdded += res.added;
+      totalUpdated += res.updated;
     } catch(e){
       console.error(e);
     }
@@ -554,11 +590,17 @@ async function loadMultipleCourseFiles(files){
 
   if(courseStore.rows.length > 0){
     $('dc').classList.add('ready');
-    $('tc').textContent = 'Đã gộp ' + courseStore.files.length + ' file/lớp · Tổng ' + courseStore.rows.length + ' học viên. (Bấm hoặc kéo thả để tiếp tục thêm lớp)';
+    $('tc').textContent = 'Đã nạp ' + courseStore.files.length + ' file/lớp · Tổng ' + courseStore.rows.length + ' học viên. (Bấm hoặc kéo thả để tiếp tục thêm/cập nhật)';
     $('course-res').style.display = 'block';
     updateCourseStats();
     renderCourseTable();
-    msgCourse('Đã nạp và gộp thành công ' + totalAdded + ' học viên mới (Tổng cộng: ' + courseStore.rows.length + ' học viên từ ' + courseStore.files.length + ' lớp).', true);
+
+    var msgParts = [];
+    if(totalAdded > 0) msgParts.push('thêm mới ' + totalAdded + ' học viên');
+    if(totalUpdated > 0) msgParts.push('cập nhật thông tin ' + totalUpdated + ' học viên đã có');
+    if(!msgParts.length) msgParts.push('dữ liệu học viên đã trùng khớp hoàn toàn');
+
+    msgCourse('Đã xử lý xong: ' + msgParts.join(', ') + ' (Tổng hiện tại: ' + courseStore.rows.length + ' học viên từ ' + courseStore.files.length + ' file/lớp).', true);
   }
 }
 
@@ -595,7 +637,7 @@ function processSingleCourseFile(file){
 
         if(!raw.length){
           msgCourse('File "' + name + '" trống hoặc không có dữ liệu.', false);
-          resolve(0);
+          resolve({added:0, updated:0});
           return;
         }
 
@@ -643,32 +685,32 @@ function processSingleCourseFile(file){
 
         if(!fileDataRows.length){
           msgCourse('File "' + name + '" không có dòng học viên nào.', false);
-          resolve(0);
+          resolve({added:0, updated:0});
           return;
         }
 
-        // 3. GỘP DỮ LIỆU VÀO courseStore
+        // 3. THIẾT LẬP HOẶC ĐỒNG BỘ HEADERS
         if(!courseStore.headers.length){
-          // File đầu tiên nạp vào: Thiết lập headers chuẩn
           courseStore.headers = fileHeaders.slice();
         }
 
-        // Tìm chỉ số cột STT và các cột khác
         var sttColIdx = courseStore.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
+        if(sttColIdx === -1 && /^stt$/i.test(norm(courseStore.headers[0]))) sttColIdx = 0;
 
         // Map cột của file mới vào cấu trúc header hiện tại
         var colMapping = [];
         fileHeaders.forEach(function(fh, fIdx){
           var normFh = norm(fh);
           var matchedIdx = courseStore.headers.findIndex(function(ch){ return norm(ch) === normFh; });
-          if(matchedIdx === -1 && fIdx < courseStore.headers.length && !/^stt$/i.test(norm(fh))){
-            // Nếu không khớp tên nhưng khớp vị trí (nằm cùng cột tương ứng)
+          if(matchedIdx === -1 && fIdx < courseStore.headers.length && !/^stt$/i.test(normFh)){
             matchedIdx = fIdx;
           }
           colMapping[fIdx] = matchedIdx;
         });
 
         var addedCount = 0;
+        var updatedCount = 0;
+
         fileDataRows.forEach(function(r){
           var newRow = new Array(courseStore.headers.length).fill('');
           r.forEach(function(val, fIdx){
@@ -678,28 +720,61 @@ function processSingleCourseFile(file){
             }
           });
 
-          // Tự động gán STT liên tục (1, 2, 3...)
-          var currentTotal = courseStore.rows.length + 1;
-          if(sttColIdx !== -1){
-            newRow[sttColIdx] = String(currentTotal);
-          } else if(/^stt$/i.test(norm(courseStore.headers[0]))){
-            newRow[0] = String(currentTotal);
-          }
+          // Xác định mã định danh duy nhất của học viên
+          var key = getStudentKey(newRow, courseStore.headers);
 
-          courseStore.rows.push(newRow);
-          addedCount++;
+          if(key && courseStore.studentKeyMap.hasOwnProperty(key)){
+            // HỌC VIÊN ĐÃ TỒN TẠI: Cập nhật thông tin, KHÔNG tạo thêm dòng mới
+            var existingRowIndex = courseStore.studentKeyMap[key];
+            var oldRow = courseStore.rows[existingRowIndex];
+            
+            // Cập nhật các giá trị mới từ file nạp lại
+            courseStore.headers.forEach(function(h, idx){
+              if(idx === sttColIdx) return; // Giữ nguyên STT
+              if(newRow[idx] !== '' && newRow[idx] != null){
+                oldRow[idx] = newRow[idx];
+              }
+            });
+            updatedCount++;
+          } else {
+            // HỌC VIÊN MỚI: Thêm vào danh sách chung
+            var currentTotal = courseStore.rows.length + 1;
+            if(sttColIdx !== -1){
+              newRow[sttColIdx] = String(currentTotal);
+            }
+            courseStore.rows.push(newRow);
+            if(key){
+              courseStore.studentKeyMap[key] = courseStore.rows.length - 1;
+            }
+            addedCount++;
+          }
         });
+
+        // Đánh lại số thứ tự STT chuẩn liên tục từ 1..N
+        if(sttColIdx !== -1){
+          courseStore.rows.forEach(function(row, idx){
+            row[sttColIdx] = String(idx + 1);
+          });
+        }
 
         if(detectedCourse && !courseStore.courses.includes(detectedCourse)){
           courseStore.courses.push(detectedCourse);
         }
-        courseStore.files.push({
-          name: name,
-          count: addedCount,
-          course: detectedCourse || ''
-        });
 
-        resolve(addedCount);
+        // Cập nhật danh sách file đã nạp (nếu file đã nạp trước đó thì ghi đè số lượng)
+        var existingFile = courseStore.files.find(function(f){ return f.name === name; });
+        if(existingFile){
+          existingFile.count = fileDataRows.length;
+          existingFile.course = detectedCourse || existingFile.course;
+        } else {
+          courseStore.files.push({
+            name: name,
+            count: fileDataRows.length,
+            course: detectedCourse || ''
+          });
+        }
+
+        resolve({added: addedCount, updated: updatedCount});
       } catch(e){
         reject(e);
       }
@@ -712,16 +787,15 @@ function updateCourseStats(){
   $('c-total').textContent = courseStore.rows.length;
   $('c-cols').textContent = courseStore.headers.length;
   
-  var courseDisplay = courseStore.courses.length === 1 ? ('Khóa ' + courseStore.courses[0]) : (courseStore.courses.length > 1 ? (courseStore.courses.length + ' khóa (' + courseStore.courses.join(', ') + ')') : 'Đã gộp');
   $('c-code').textContent = courseStore.courses.length ? courseStore.courses.join(', ') : '---';
   $('course-title').textContent = 'Danh sách học viên gộp (' + courseStore.rows.length + ' học viên)';
-  $('course-meta').textContent = 'Đã gộp ' + courseStore.files.length + ' lớp/file · Tổng ' + courseStore.rows.length + ' học viên · ' + courseStore.headers.length + ' cột dữ liệu';
+  $('course-meta').textContent = 'Đã nạp ' + courseStore.files.length + ' lớp/file · Tổng ' + courseStore.rows.length + ' học viên · ' + courseStore.headers.length + ' cột dữ liệu';
 
   // Render tags file đã gộp
   var tagsContainer = $('course-files-list');
   if(tagsContainer){
     tagsContainer.innerHTML = courseStore.files.map(function(f){
-      return '<span class="file-tag">📄 ' + esc(f.name) + ' <b>(+' + f.count + ' HV' + (f.course ? ' · ' + f.course : '') + ')</b></span>';
+      return '<span class="file-tag">📄 ' + esc(f.name) + ' <b>(' + f.count + ' HV' + (f.course ? ' · ' + f.course : '') + ')</b></span>';
     }).join('');
   }
 }
