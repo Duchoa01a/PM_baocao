@@ -19,143 +19,375 @@
 @font-face{font-family:'Space Grotesk';font-weight:700;font-style:normal;font-display:swap;src:url(fonts/space-grotesk-vietnamese-700-normal.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
 
 :root{
-  --ink:#1B2530;--soft:#4B5763;--muted:#7E8894;--line:#E3DFD5;--paper:#FAF8F2;--panel:#fff;
-  --asp:#22303C;--asp2:#2F4152;--amber:#E6A339;--amberd:#C6832A;--good:#3E7A57;--warn:#B4482E;
-  --blue:#2F6FA8;--eco:#7A5BB5;--teal:#2A8F85;--orange:#D97706;
+  --ink:#1E293B;--soft:#475569;--muted:#64748B;--line:#CBD5E1;--paper:#F1F5F9;--panel:#fff;
+  --asp:#107C41;--asp2:#0B5A2F;--amber:#D97706;--amberd:#B45309;--good:#15803D;--warn:#DC2626;
+  --blue:#2563EB;--eco:#7C3AED;--teal:#0D9488;--orange:#EA580C;
+  --excel-green:#107C41;--excel-dark:#0B5A2F;--excel-light:#E8F5E9;--excel-header-bg:#F3F4F6;
+  --excel-border:#D1D5DB;--excel-header-border:#9CA3AF;--excel-col-head-bg:#F8FAFC;
+  --grid-border:#D1D5DB;--grid-header:#F3F4F6;--grid-header-border:#9CA3AF;
+  --grid-zebra:#F9FAFB;--grid-hover:#EFF6FF;
 }
 @media (prefers-color-scheme:dark){
   :root{
-    --ink:#EDEFF2;--soft:#C7CDD4;--muted:#8B94A0;--line:#33404C;--paper:#141B22;--panel:#1B242D;
-    --asp:#0E151B;--asp2:#1B2731;--amber:#E9AC49;--amberd:#D6952E;--good:#5FAE81;--warn:#DE7455;
-    --blue:#6FA8D8;--eco:#B49BE6;--teal:#4EBEB1;--orange:#F59E0B;
+    --ink:#F1F5F9;--soft:#CBD5E1;--muted:#94A3B8;--line:#334155;--paper:#0F172A;--panel:#1E293B;
+    --asp:#107C41;--asp2:#0B5A2F;--amber:#FBBF24;--amberd:#F59E0B;--good:#4ADE80;--warn:#F87171;
+    --blue:#60A5FA;--eco:#C084FC;--teal:#2DD4BF;--orange:#FB923C;
+    --excel-green:#107C41;--excel-dark:#0B5A2F;--excel-light:#1E3A8A;--excel-header-bg:#1E293B;
+    --excel-border:#334155;--excel-header-border:#475569;--excel-col-head-bg:#182234;
+    --grid-border:#334155;--grid-header:#1E293B;--grid-header-border:#475569;
+    --grid-zebra:#182234;--grid-hover:#1E3A8A;
   }
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{background:var(--paper);color:var(--ink);font-family:'Be Vietnam Pro',-apple-system,'Segoe UI',sans-serif;min-height:100vh}
-.num{font-family:'Space Grotesk','Be Vietnam Pro',sans-serif}
+body{background:var(--paper);color:var(--ink);font-family:'Segoe UI',-apple-system,'Be Vietnam Pro',sans-serif;min-height:100vh}
+.num{font-family:'Space Grotesk','Segoe UI',sans-serif}
 
 /* Header */
-.top{background:linear-gradient(180deg,var(--asp),var(--asp2));padding:22px 20px 56px;position:relative}
-.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:repeating-linear-gradient(90deg,var(--amber) 0 28px,transparent 28px 48px)}
-.in{max-width:1200px;margin:0 auto}
-.org{color:var(--amber);font-size:13px;font-weight:600;margin:0 0 6px;letter-spacing:0.5px}
-h1{color:#fff;font-size:26px;margin:0 0 6px;font-weight:700}
-.sub{color:#B9C3CC;font-size:14px;line-height:1.55;margin:0 0 16px;max-width:80ch}
+.top{background:linear-gradient(135deg,#107C41 0%,#0B5A2F 100%);padding:20px 20px 52px;position:relative;color:#fff}
+.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.25)}
+.in{max-width:1300px;margin:0 auto}
+.org{color:#A7F3D0;font-size:12.5px;font-weight:700;margin:0 0 4px;letter-spacing:0.8px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-items:center;gap:10px}
+.sub{color:#E2E8F0;font-size:13.5px;line-height:1.5;margin:0 0 16px;max-width:85ch;opacity:.95}
 
-/* Tab Switcher */
-.nav-tabs{display:inline-flex;background:rgba(0,0,0,.32);padding:4px;border-radius:12px;gap:4px;border:1px solid rgba(255,255,255,.15);flex-wrap:wrap}
-.nav-tab{border:0;background:transparent;color:#CFD8E3;font-family:inherit;font-size:13.5px;font-weight:600;padding:9px 16px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s ease}
-.nav-tab:hover{color:#fff;background:rgba(255,255,255,.08)}
-.nav-tab.active{background:#fff;color:var(--asp);box-shadow:0 4px 12px rgba(0,0,0,.15)}
-.nav-tab .badge{font-size:11.5px;padding:2px 7px;border-radius:100px;background:rgba(0,0,0,.08);font-weight:700}
-.nav-tab.active .badge{background:var(--asp);color:#fff}
+/* Tab Switcher (Excel Ribbon / Sheet Tabs style) */
+.nav-tabs{display:inline-flex;background:rgba(0,0,0,.25);padding:4px;border-radius:10px;gap:4px;border:1px solid rgba(255,255,255,.2);flex-wrap:wrap}
+.nav-tab{border:0;background:transparent;color:#E2E8F0;font-family:inherit;font-size:13px;font-weight:600;padding:8px 16px;border-radius:7px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .15s ease}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,.15)}
+.nav-tab.active{background:#fff;color:#107C41;box-shadow:0 3px 10px rgba(0,0,0,.2)}
+.nav-tab .badge{font-size:11px;padding:2px 7px;border-radius:100px;background:rgba(0,0,0,.08);font-weight:700}
+.nav-tab.active .badge{background:#107C41;color:#fff}
 
 /* Main Container */
-.wrap{max-width:1200px;margin:-34px auto 50px;padding:0 20px;position:relative}
+.wrap{max-width:1300px;margin:-32px auto 40px;padding:0 20px;position:relative}
 .tab-content{display:none}
-.tab-content.active{display:block;animation:fadeIn .2s ease-out}
-@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.tab-content.active{display:block;animation:fadeIn .18s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
 
 /* Card & Drops */
-.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px -20px rgba(20,25,30,.35);overflow:hidden}
-.drops{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:18px}
-.drop{display:block;position:relative;border:2px dashed var(--line);border-radius:12px;padding:22px 18px;cursor:pointer;background:var(--paper);transition:border-color .15s, background .15s}
-.drop:hover,.drop.over,.drop:focus-within{border-color:var(--amber);background:rgba(230,163,57,.03)}
-.drop.ready{border-style:solid;border-color:var(--good);background:rgba(62,122,87,.03)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 25px -10px rgba(15,23,42,.2);overflow:hidden}
+.drops{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px}
+.drop{display:block;position:relative;border:2px dashed var(--line);border-radius:9px;padding:20px 16px;cursor:pointer;background:var(--paper);transition:border-color .15s, background .15s}
+.drop:hover,.drop.over,.drop:focus-within{border-color:var(--excel-green);background:rgba(16,124,65,.04)}
+.drop.ready{border-style:solid;border-color:var(--good);background:rgba(21,128,61,.04)}
 .drop input{position:absolute;opacity:0;width:1px;height:1px}
-.drop b{display:block;font-size:15px;margin-bottom:4px}
-.drop.v b{color:var(--blue)}.drop.e b{color:var(--eco)}.drop.c b{color:var(--teal)}.drop.s b{color:var(--orange)}
-.drop span{font-size:13px;color:var(--muted);line-height:1.5;word-break:break-all}
+.drop b{display:block;font-size:14.5px;margin-bottom:3px}
+.drop.v b{color:var(--blue)}.drop.e b{color:var(--eco)}.drop.c b{color:var(--teal)}.drop.s b{color:var(--excel-green)}
+.drop span{font-size:12.5px;color:var(--muted);line-height:1.45;word-break:break-all}
 
 /* Single Drop */
-.drop-single{padding:18px}
-.drop.single{padding:26px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.drop.single .icon{font-size:32px;margin-bottom:8px;opacity:.9}
+.drop-single{padding:16px}
+.drop.single{padding:22px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.drop.single .icon{font-size:30px;margin-bottom:6px;opacity:.9}
 
 /* Messages */
-.msg{margin:0 18px 18px;padding:11px 14px;border-radius:9px;font-size:13px;line-height:1.6;display:none}
+.msg{margin:0 16px 16px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.55;display:none}
 .msg.show{display:block}
-.msg.ok{background:rgba(62,122,87,.1);color:var(--good);border:1px solid rgba(62,122,87,.3)}
-.msg.err{background:rgba(180,72,46,.1);color:var(--warn);border:1px solid rgba(180,72,46,.3)}
-.rule{padding:14px 18px;border-top:1px solid var(--line);font-size:13px;color:var(--soft);line-height:1.7;background:var(--paper)}
+.msg.ok{background:rgba(21,128,61,.1);color:var(--good);border:1px solid rgba(21,128,61,.3)}
+.msg.err{background:rgba(220,38,38,.1);color:var(--warn);border:1px solid rgba(220,38,38,.3)}
+.rule{padding:12px 16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--soft);line-height:1.6;background:var(--paper)}
 
-/* Result Card */
-.res-card{margin-top:22px}
-.head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
-.head h2{margin:0;font-size:17.5px;color:var(--ink)}.head p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+/* Result Card & Action bar */
+.res-card{margin-top:18px}
+.head{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line);background:#F8FAFC}
+.head h2{margin:0;font-size:16px;color:var(--ink);font-weight:700;display:flex;align-items:center;gap:6px}.head p{margin:2px 0 0;font-size:12px;color:var(--muted)}
 .head-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.btn{border:0;background:var(--asp);color:#fff;font:inherit;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
-.btn:hover{background:var(--asp2)}.btn:focus-visible,.chip:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.btn-secondary{background:var(--paper);color:var(--soft);border:1px solid var(--line)}
-.btn-secondary:hover{background:var(--panel);color:var(--ink);border-color:var(--amber)}
-.btn-danger{background:rgba(180,72,46,.1);color:var(--warn);border:1px solid rgba(180,72,46,.25)}
+.btn{border:0;background:var(--ink);color:#fff;font:inherit;font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
+.btn:hover{background:#0F172A}.btn:focus-visible,.chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+.btn-excel{background:#107C41;color:#fff}
+.btn-excel:hover{background:#0B5A2F}
+.btn-secondary{background:var(--panel);color:var(--soft);border:1px solid var(--line)}
+.btn-secondary:hover{background:var(--paper);color:var(--ink);border-color:var(--excel-green)}
+.btn-danger{background:rgba(220,38,38,.08);color:var(--warn);border:1px solid rgba(220,38,38,.2)}
 .btn-danger:hover{background:var(--warn);color:#fff}
 
 /* Stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
 .stats.cols-3{grid-template-columns:repeat(3,1fr)}
-.st{background:var(--panel);padding:14px 18px}
-.st p{margin:0 0 6px;font-size:12.5px;color:var(--muted)}
-.st div{font-size:26px;font-weight:700;line-height:1}
-.st.v div{color:var(--blue)}.st.e div{color:var(--eco)}.st.n div{color:var(--warn)}.st.t div{color:var(--amberd)}.st.c div{color:var(--teal)}.st.o div{color:var(--orange)}
+.st{background:var(--panel);padding:10px 14px}
+.st p{margin:0 0 3px;font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+.st div{font-size:22px;font-weight:700;line-height:1.1}
+.st.v div{color:var(--blue)}.st.e div{color:var(--eco)}.st.n div{color:var(--warn)}.st.t div{color:var(--excel-green)}.st.c div{color:var(--teal)}.st.o div{color:var(--orange)}
 
 /* Tags */
-.file-tags{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line);background:var(--paper)}
-.file-tag{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:500;color:var(--ink)}
-.file-tag b{color:var(--orange)}
+.file-tags{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;border-top:1px solid var(--line);background:var(--paper)}
+.file-tag{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);padding:3px 9px;border-radius:5px;font-size:11.5px;font-weight:500;color:var(--ink)}
+.file-tag b{color:var(--excel-green)}
 
 /* Filters & Search */
-.filters{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line);background:var(--paper)}
-.chip{border:1px solid var(--line);background:var(--panel);color:var(--soft);font:inherit;font-size:12.5px;font-weight:600;padding:6px 13px;border-radius:100px;cursor:pointer;transition:all .15s}
-.chip:hover{border-color:var(--amber);color:var(--ink)}
-.chip.on{background:var(--asp);border-color:var(--asp);color:#fff}
+.filters{display:flex;gap:6px;flex-wrap:wrap;padding:8px 16px;border-top:1px solid var(--line);background:#F8FAFC}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--soft);font:inherit;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:100px;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--excel-green);color:var(--ink)}
+.chip.on{background:#107C41;border-color:#107C41;color:#fff}
 
-.search-bar{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);background:var(--paper)}
-.search-wrap{position:relative;flex:1}
-.search-wrap input{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px 12px 9px 36px;background:var(--panel);color:var(--ink);font:inherit;font-size:13px}
-.search-wrap input:focus{outline:3px solid rgba(47,111,168,.18);border-color:var(--blue)}
-.search-wrap::before{content:"🔍";position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;opacity:.65}
-.clear-btn{border:1px solid var(--line);background:var(--panel);color:var(--soft);border-radius:9px;padding:8px 14px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
-.clear-btn:hover{border-color:var(--amber);color:var(--ink)}
+/* =========================================================
+   EXCEL FORMULA BAR & WORKBOOK GRID (AUTHENTIC EXCEL UI)
+   ========================================================= */
+.excel-formula-bar{
+  display:flex;
+  align-items:center;
+  background:#FFFFFF;
+  border-top:1px solid var(--grid-border);
+  border-bottom:1px solid var(--grid-border);
+  padding:4px 8px;
+  font-family:'Segoe UI',-apple-system,sans-serif;
+  font-size:12.5px;
+  gap:6px;
+  user-select:none;
+}
+.excel-name-box{
+  width:65px;
+  padding:3px 6px;
+  background:#F8FAFC;
+  border:1px solid #D1D5DB;
+  border-radius:3px;
+  font-weight:700;
+  text-align:center;
+  color:#107C41;
+  font-size:12px;
+}
+.excel-fx-icon{
+  font-weight:700;
+  font-style:italic;
+  color:#64748B;
+  padding:0 4px;
+  font-size:13px;
+  font-family:'Times New Roman',serif;
+}
+.excel-formula-input-wrap{
+  flex:1;
+  display:flex;
+  align-items:center;
+  position:relative;
+}
+.excel-formula-input{
+  width:100%;
+  border:1px solid transparent;
+  padding:4px 8px;
+  font-size:12.5px;
+  color:var(--ink);
+  background:transparent;
+  border-radius:3px;
+  outline:none;
+  font-family:inherit;
+}
+.excel-formula-input:focus{
+  border-color:#107C41;
+  background:#FFFFFF;
+}
+.excel-search-quick{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding-left:8px;
+  border-left:1px solid var(--line);
+}
+.excel-search-quick input{
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:3px 8px;
+  font-size:12px;
+  width:180px;
+}
+.excel-search-quick input:focus{
+  outline:1px solid #107C41;
+  border-color:#107C41;
+}
 
-/* Table & Scroll container */
-.tw{overflow-x:auto;max-height:560px;overflow-y:auto;border-top:1px solid var(--line)}
-.tw::-webkit-scrollbar{height:7px;width:7px}
-.tw::-webkit-scrollbar-track{background:var(--paper)}
-.tw::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
-.tw::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+/* Excel Scroll Wrapper */
+.tw{
+  overflow-x:auto;
+  max-height:560px;
+  overflow-y:auto;
+  background:#FFFFFF;
+  position:relative;
+}
+.tw::-webkit-scrollbar{height:10px;width:10px}
+.tw::-webkit-scrollbar-track{background:#F1F5F9}
+.tw::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+.tw::-webkit-scrollbar-thumb:hover{background:#94A3B8}
 
-table{border-collapse:collapse;width:100%;font-size:13.5px;table-layout:auto}
-th{position:sticky;top:0;background:var(--paper);text-align:left;font-weight:600;color:var(--soft);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:2}
-td{padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;max-width:320px;overflow:hidden;text-overflow:ellipsis}
-tbody tr:hover td{background:rgba(230,163,57,.04)}
-tr.chg td{background:rgba(122,91,181,.08)}
+/* Authentic Excel Grid */
+table.excel-grid{
+  border-collapse:collapse;
+  width:100%;
+  font-size:12.5px;
+  font-family:'Segoe UI',-apple-system,Calibri,Arial,sans-serif;
+  table-layout:auto;
+  border-spacing:0;
+  background:#FFFFFF;
+}
 
-/* Table 1 Column alignments */
-#table-report th:first-child, #table-report td:first-child{width:48px;text-align:center}
-#table-report th:nth-child(3), #table-report td:nth-child(3),
-#table-report th:nth-child(4), #table-report td:nth-child(4),
-#table-report th:nth-child(5), #table-report td:nth-child(5),
-#table-report th:nth-child(6), #table-report td:nth-child(6),
-#table-report th:nth-child(7), #table-report td:nth-child(7),
-#table-report th:nth-child(8), #table-report td:nth-child(8){text-align:center}
+/* Row 1: Column Letters (A, B, C, D...) */
+table.excel-grid tr.excel-col-letters th{
+  background:#F1F5F9;
+  color:#64748B;
+  font-size:11px;
+  font-weight:600;
+  padding:3px 6px;
+  border:1px solid #CBD5E1;
+  text-align:center;
+  user-select:none;
+  position:sticky;
+  top:0;
+  z-index:4;
+  letter-spacing:0.5px;
+}
+table.excel-grid tr.excel-col-letters th.corner-cell{
+  background:#E2E8F0;
+  color:#475569;
+  width:45px;
+  min-width:45px;
+  font-weight:700;
+  position:sticky;
+  left:0;
+  top:0;
+  z-index:5;
+}
 
-.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:100px;border:1px solid}
-.tag.v{color:var(--blue);border-color:var(--blue)}.tag.e{color:var(--eco);border-color:var(--eco)}.tag.n{color:var(--warn);border-color:var(--warn)}
-.old{color:var(--muted);text-decoration:line-through;font-size:12px;margin-right:6px}
-.warn{padding:12px 18px;font-size:13px;line-height:1.7;color:var(--warn);border-top:1px solid var(--line)}
-.empty-table{padding:36px 18px;text-align:center;color:var(--muted);font-size:13.5px}
+/* Row 2: Field Header Names */
+table.excel-grid tr.excel-field-headers th{
+  background:#F8FAFC;
+  color:#0F172A;
+  font-size:12px;
+  font-weight:700;
+  padding:7px 10px;
+  border:1px solid #CBD5E1;
+  text-align:center;
+  white-space:nowrap;
+  position:sticky;
+  top:22px;
+  z-index:3;
+  box-shadow:inset 0 -1px 0 #CBD5E1;
+}
+table.excel-grid tr.excel-field-headers th.row-idx-corner{
+  background:#E2E8F0;
+  color:#475569;
+  position:sticky;
+  left:0;
+  top:22px;
+  z-index:5;
+  width:45px;
+  min-width:45px;
+}
+
+/* Data Cells */
+table.excel-grid td{
+  padding:5px 10px;
+  border:1px solid #E2E8F0;
+  white-space:nowrap;
+  max-width:320px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#1E293B;
+  font-size:12.5px;
+  background:#FFFFFF;
+  cursor:cell;
+}
+
+/* Row Header / Leftmost Row Number (1, 2, 3...) */
+table.excel-grid td.row-num-cell{
+  background:#F1F5F9;
+  color:#64748B;
+  font-weight:600;
+  text-align:center;
+  width:45px;
+  min-width:45px;
+  border:1px solid #CBD5E1;
+  position:sticky;
+  left:0;
+  z-index:2;
+  user-select:none;
+}
+
+/* Zebra Striping & Hover */
+table.excel-grid tbody tr:nth-child(even) td:not(.row-num-cell){background:#FAFAFA}
+table.excel-grid tbody tr:hover td:not(.row-num-cell){background:#F0FDF4}
+table.excel-grid tr.chg td:not(.row-num-cell){background:#F5F3FF}
+
+/* Selected Active Cell (Excel Green Box) */
+table.excel-grid td.cell-active{
+  outline:2px solid #107C41 !important;
+  outline-offset:-2px;
+  background:#ECFDF5 !important;
+  position:relative;
+  z-index:1;
+}
+
+/* Sheet Footer Bar */
+.excel-footer-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:4px 14px;
+  background:#F1F5F9;
+  border-top:1px solid #CBD5E1;
+  font-size:11.5px;
+  color:#475569;
+  font-weight:500;
+  user-select:none;
+}
+.excel-sheet-tabs-wrap{
+  display:flex;
+  align-items:center;
+  gap:2px;
+}
+.sheet-tab-nav{
+  background:transparent;
+  border:0;
+  color:#64748B;
+  padding:3px 6px;
+  font-size:12px;
+  cursor:pointer;
+  border-radius:3px;
+}
+.sheet-tab-nav:hover{background:#E2E8F0;color:#0F172A}
+.sheet-tab-btn{
+  background:#FFFFFF;
+  border:1px solid #CBD5E1;
+  border-bottom:2px solid #107C41;
+  padding:4px 14px;
+  border-radius:4px 4px 0 0;
+  color:#107C41;
+  font-weight:700;
+  font-size:11.5px;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  box-shadow:0 -1px 3px rgba(0,0,0,.03);
+}
+.excel-status-info{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.excel-status-item{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+
+.tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 7px;border-radius:3px;border:1px solid}
+.tag.v{color:var(--blue);border-color:var(--blue);background:rgba(37,99,235,.06)}
+.tag.e{color:var(--eco);border-color:var(--eco);background:rgba(124,58,237,.06)}
+.tag.n{color:var(--warn);border-color:var(--warn);background:rgba(220,38,38,.06)}
+.old{color:var(--muted);text-decoration:line-through;font-size:11px;margin-right:5px}
+.warn{padding:10px 16px;font-size:12.5px;line-height:1.6;color:var(--warn);border-top:1px solid var(--line)}
+.empty-table{padding:32px 16px;text-align:center;color:var(--muted);font-size:13px}
 
 @media(max-width:640px){
   .drops{grid-template-columns:1fr}
   .stats{grid-template-columns:1fr 1fr}
   .stats.cols-3{grid-template-columns:1fr}
-  h1{font-size:22px}
+  h1{font-size:20px}
   .nav-tabs{width:100%;display:flex}
-  .nav-tab{flex:1;justify-content:center;padding:8px 8px;font-size:12.5px}
+  .nav-tab{flex:1;justify-content:center;padding:7px 6px;font-size:12px}
   .head-actions{width:100%}
   .head-actions .btn{flex:1}
+  .excel-formula-bar{flex-wrap:wrap}
+  .excel-search-quick{width:100%;border-left:0;padding-left:0;margin-top:4px}
+  .excel-search-quick input{width:100%}
 }
 </style>
 </head>
@@ -163,9 +395,13 @@ tr.chg td{background:rgba(122,91,181,.08)}
 
 <div class="top">
   <div class="in">
-    <p class="org">TRUNG TÂM GDNN&amp;SHLX KIM THÀNH</p>
-    <h1 id="top-title">Phần mềm báo cáo</h1>
-    <p class="sub" id="top-desc">Hệ thống xử lý gộp báo cáo cabin Viettel - Ecotek, tra cứu khóa học và tổng hợp nhiều lớp.</p>
+    <div class="org">
+      <span>🏢 TRUNG TÂM GDNN &amp; SHLX KIM THÀNH</span>
+    </div>
+    <h1 id="top-title">
+      <span>📊 Phần mềm báo cáo</span>
+    </h1>
+    <p class="sub" id="top-desc">Hệ thống xử lý bảng tính Excel: gộp báo cáo cabin Viettel &amp; Ecotek, tra cứu thông tin khóa học và tự động gộp học viên các lớp.</p>
     
     <div class="nav-tabs" role="tablist">
       <button type="button" class="nav-tab active" id="tab-btn-report" onclick="setTab('report')">
@@ -191,18 +427,18 @@ tr.chg td{background:rgba(122,91,181,.08)}
       <div class="drops">
         <label class="drop v" id="dv">
           <input type="file" id="fv" accept=".xlsx,.xls">
-          <b>Báo cáo Viettel</b>
-          <span id="tv">Bấm hoặc kéo thả file .xlsx vào đây</span>
+          <b>📁 Báo cáo Viettel</b>
+          <span id="tv">Bấm hoặc kéo thả file Excel Viettel (.xlsx) vào đây</span>
         </label>
         <label class="drop e" id="de">
           <input type="file" id="fe" accept=".xlsx,.xls">
-          <b>Báo cáo Ecotek</b>
-          <span id="te">Bấm hoặc kéo thả file .xlsx vào đây</span>
+          <b>📁 Báo cáo Ecotek</b>
+          <span id="te">Bấm hoặc kéo thả file Excel Ecotek (.xlsx) vào đây</span>
         </label>
       </div>
       <div class="msg" id="msg-report" role="status"></div>
       <div class="rule">
-        <b>Cách gộp:</b> Hai báo cáo được đối chiếu theo mã học viên, nếu mã khác nhau thì theo họ tên và ngày sinh. Học viên đáp ứng ở báo cáo Viettel được ghi <i>Cabin Viettel</i>. Học viên chưa đáp ứng ở Viettel mà đáp ứng ở báo cáo Ecotek thì lấy thời gian và số nội dung của Ecotek, ghi <i>Cabin Ecotek</i>. Học viên không đáp ứng ở cả hai báo cáo giữ nguyên số liệu Viettel, cột Cabin để trống.
+        <b>Nguyên tắc gộp:</b> Hai báo cáo được đối chiếu theo mã học viên (hoặc họ tên + ngày sinh). Học viên đáp ứng ở báo cáo Viettel được ghi <i>Cabin Viettel</i>. Học viên chưa đáp ứng ở Viettel mà đáp ứng ở báo cáo Ecotek thì lấy thời gian và số nội dung của Ecotek, ghi <i>Cabin Ecotek</i>.
       </div>
     </div>
 
@@ -212,7 +448,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
           <h2 id="rt">Kết quả gộp</h2>
           <p id="rs"></p>
         </div>
-        <button class="btn" id="exp" type="button">⬇ Xuất Excel</button>
+        <button class="btn btn-excel" id="exp" type="button">⬇ Xuất file Excel</button>
       </div>
       <div class="stats">
         <div class="st t"><p>Tổng học viên</p><div class="num" id="sT">0</div></div>
@@ -221,29 +457,41 @@ tr.chg td{background:rgba(122,91,181,.08)}
         <div class="st n"><p>Không đáp ứng</p><div class="num" id="sN">0</div></div>
       </div>
       <div class="filters" id="fl"></div>
-      <div class="search-bar">
-        <div class="search-wrap">
-          <input id="student-search" type="search" placeholder="Tìm tên học viên, mã học viên hoặc ngày sinh..." aria-label="Tìm học viên">
+      
+      <!-- Excel Formula & Search Bar -->
+      <div class="excel-formula-bar">
+        <div class="excel-name-box" id="report-name-box">A1</div>
+        <div class="excel-fx-icon">fx</div>
+        <div class="excel-formula-input-wrap">
+          <input class="excel-formula-input" id="report-formula-val" readonly placeholder="Chọn ô để xem nội dung chi tiết...">
         </div>
-        <button class="clear-btn" id="clear-search" type="button">Xóa tìm</button>
+        <div class="excel-search-quick">
+          <span>🔍</span>
+          <input id="student-search" type="search" placeholder="Tìm tên, mã HV, ngày sinh..." aria-label="Tìm học viên">
+          <button class="btn btn-secondary" style="padding:3px 8px;font-size:11.5px" id="clear-search" type="button">Xóa</button>
+        </div>
       </div>
+
       <div id="wn"></div>
       <div class="tw">
-        <table id="table-report">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Họ và tên</th>
-              <th>Mã học viên</th>
-              <th>Ngày sinh</th>
-              <th>Thời gian</th>
-              <th>Số nội dung</th>
-              <th>Kết quả</th>
-              <th>Cabin</th>
-            </tr>
-          </thead>
+        <table id="table-report" class="excel-grid">
+          <thead id="report-th"></thead>
           <tbody id="tb"></tbody>
         </table>
+      </div>
+      <div class="excel-footer-bar">
+        <div class="excel-sheet-tabs-wrap">
+          <button type="button" class="sheet-tab-nav" title="Đầu">|◀</button>
+          <button type="button" class="sheet-tab-nav" title="Trước">◀</button>
+          <span class="sheet-tab-btn">📋 KetQuaGop</span>
+          <button type="button" class="sheet-tab-nav" title="Sau">▶</button>
+          <button type="button" class="sheet-tab-nav" title="Cuối">▶|</button>
+        </div>
+        <div class="excel-status-info">
+          <span class="excel-status-item">🟢 SẴN SÀNG</span>
+          <span class="excel-status-item" id="report-sheet-status">0 dòng dữ liệu</span>
+          <span class="excel-status-item">Zoom 100%</span>
+        </div>
       </div>
     </div>
   </div>
@@ -254,9 +502,9 @@ tr.chg td{background:rgba(122,91,181,.08)}
       <div class="drop-single">
         <label class="drop single c" id="dc">
           <input type="file" id="fc" accept=".xlsx,.xls,.csv">
-          <div class="icon">📁</div>
-          <b>Tải file thông tin khóa học</b>
-          <span id="tc">Bấm vào đây hoặc kéo thả file Excel (.xlsx, .xls, .csv) để tra cứu học viên</span>
+          <div class="icon">📗</div>
+          <b>Tải file thông tin khóa học Excel</b>
+          <span id="tc">Bấm vào đây hoặc kéo thả file Excel (.xlsx, .xls, .csv) để xem giao diện chuẩn bảng tính</span>
         </label>
       </div>
       <div class="msg" id="msg-course" role="status"></div>
@@ -266,29 +514,50 @@ tr.chg td{background:rgba(122,91,181,.08)}
       <div class="head">
         <div>
           <h2 id="course-title">Thông tin khóa học</h2>
-          <p id="course-meta">Đã tải danh sách học viên</p>
+          <p id="course-meta">Đã tải danh sách học viên từ file Excel</p>
         </div>
-        <button class="btn" id="course-exp" type="button">⬇ Xuất danh sách Excel</button>
+        <button class="btn btn-excel" id="course-exp" type="button">⬇ Xuất danh sách Excel</button>
       </div>
       
       <div class="stats cols-3">
-        <div class="st c"><p>Mã khóa học</p><div id="c-code" style="font-size:20px;font-weight:700">---</div></div>
+        <div class="st c"><p>Mã khóa học</p><div id="c-code" style="font-size:19px;font-weight:700">---</div></div>
         <div class="st t"><p>Tổng số học viên</p><div class="num" id="c-total">0</div></div>
         <div class="st e"><p>Số cột thông tin</p><div class="num" id="c-cols">0</div></div>
       </div>
 
-      <div class="search-bar">
-        <div class="search-wrap">
-          <input id="course-search" type="search" placeholder="Tìm kiếm theo bất kỳ thông tin nào (Họ tên, CCCD, Mã HV, Ngày sinh...)..." aria-label="Tìm thông tin khóa học">
+      <!-- Excel Formula & Search Bar -->
+      <div class="excel-formula-bar">
+        <div class="excel-name-box" id="course-name-box">A1</div>
+        <div class="excel-fx-icon">fx</div>
+        <div class="excel-formula-input-wrap">
+          <input class="excel-formula-input" id="course-formula-val" readonly placeholder="Chọn ô để xem nội dung chi tiết...">
         </div>
-        <button class="clear-btn" id="course-clear-search" type="button">Xóa tìm</button>
+        <div class="excel-search-quick">
+          <span>🔍</span>
+          <input id="course-search" type="search" placeholder="Tìm kiếm trong bảng tính..." aria-label="Tìm thông tin khóa học">
+          <button class="btn btn-secondary" style="padding:3px 8px;font-size:11.5px" id="course-clear-search" type="button">Xóa</button>
+        </div>
       </div>
 
       <div class="tw">
-        <table id="table-course">
+        <table id="table-course" class="excel-grid">
           <thead id="course-th"></thead>
           <tbody id="course-tb"></tbody>
         </table>
+      </div>
+      <div class="excel-footer-bar">
+        <div class="excel-sheet-tabs-wrap">
+          <button type="button" class="sheet-tab-nav" title="Đầu">|◀</button>
+          <button type="button" class="sheet-tab-nav" title="Trước">◀</button>
+          <span class="sheet-tab-btn" id="course-sheet-tab-name">📋 Sheet1</span>
+          <button type="button" class="sheet-tab-nav" title="Sau">▶</button>
+          <button type="button" class="sheet-tab-nav" title="Cuối">▶|</button>
+        </div>
+        <div class="excel-status-info">
+          <span class="excel-status-item">🟢 SẴN SÀNG</span>
+          <span class="excel-status-item" id="course-sheet-status">0 dòng dữ liệu</span>
+          <span class="excel-status-item">Zoom 100%</span>
+        </div>
       </div>
     </div>
   </div>
@@ -306,7 +575,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
       </div>
       <div class="msg" id="msg-summary" role="status"></div>
       <div class="rule">
-        <b>Nguyên tắc Báo cáo tổng:</b> Khi thêm các file Excel lớp, hệ thống sẽ tự động nối tiếp học viên vào danh sách tổng. Nếu nạp lại file của lớp đã có, phần mềm sẽ <b>chỉ cập nhật thông tin</b> học viên chứ không tạo thêm dòng trùng lặp.
+        <b>Nguyên tắc Báo cáo tổng:</b> Tự động tổng hợp dữ liệu học viên từ nhiều lớp vào 1 file Excel duy nhất. Nếu thêm lại file lớp đã có, phần mềm <b>chỉ cập nhật thông tin</b> học viên và không bị nhân đôi/trùng lặp dòng.
       </div>
     </div>
 
@@ -319,7 +588,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
         <div class="head-actions">
           <button class="btn btn-secondary" id="summary-add-more" type="button">➕ Thêm lớp / file khác</button>
           <button class="btn btn-danger" id="summary-reset" type="button">🗑️ Xóa làm mới</button>
-          <button class="btn" id="summary-exp" type="button">⬇ Xuất Excel Báo cáo tổng</button>
+          <button class="btn btn-excel" id="summary-exp" type="button">⬇ Xuất Excel Báo cáo tổng</button>
         </div>
       </div>
       
@@ -332,18 +601,39 @@ tr.chg td{background:rgba(122,91,181,.08)}
 
       <div class="file-tags" id="summary-files-list"></div>
 
-      <div class="search-bar">
-        <div class="search-wrap">
-          <input id="summary-search" type="search" placeholder="Tìm kiếm nhanh trong toàn bộ báo cáo tổng (Họ tên, CCCD, Mã HV, Ngày sinh...)..." aria-label="Tìm báo cáo tổng">
+      <!-- Excel Formula & Search Bar -->
+      <div class="excel-formula-bar">
+        <div class="excel-name-box" id="summary-name-box">A1</div>
+        <div class="excel-fx-icon">fx</div>
+        <div class="excel-formula-input-wrap">
+          <input class="excel-formula-input" id="summary-formula-val" readonly placeholder="Chọn ô để xem nội dung chi tiết...">
         </div>
-        <button class="clear-btn" id="summary-clear-search" type="button">Xóa tìm</button>
+        <div class="excel-search-quick">
+          <span>🔍</span>
+          <input id="summary-search" type="search" placeholder="Tìm kiếm trong báo cáo tổng..." aria-label="Tìm báo cáo tổng">
+          <button class="btn btn-secondary" style="padding:3px 8px;font-size:11.5px" id="summary-clear-search" type="button">Xóa</button>
+        </div>
       </div>
 
       <div class="tw">
-        <table id="table-summary">
+        <table id="table-summary" class="excel-grid">
           <thead id="summary-th"></thead>
           <tbody id="summary-tb"></tbody>
         </table>
+      </div>
+      <div class="excel-footer-bar">
+        <div class="excel-sheet-tabs-wrap">
+          <button type="button" class="sheet-tab-nav" title="Đầu">|◀</button>
+          <button type="button" class="sheet-tab-nav" title="Trước">◀</button>
+          <span class="sheet-tab-btn">📋 BaoCaoTongHop</span>
+          <button type="button" class="sheet-tab-nav" title="Sau">▶</button>
+          <button type="button" class="sheet-tab-nav" title="Cuối">▶|</button>
+        </div>
+        <div class="excel-status-info">
+          <span class="excel-status-item">🟢 SẴN SÀNG</span>
+          <span class="excel-status-item" id="summary-sheet-status">0 dòng dữ liệu</span>
+          <span class="excel-status-item">Zoom 100%</span>
+        </div>
       </div>
     </div>
   </div>
@@ -357,6 +647,18 @@ function $(i){return document.getElementById(i)}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function norm(s){return String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/đ/g,'d').replace(/\s+/g,' ').trim()}
 function p2(n){n=String(n).replace(/^0+(?=\d)/,'');return(n.length<2?'0':'')+n}
+
+/* Chuyển đổi số thứ tự cột 0->A, 1->B, 25->Z, 26->AA */
+function toColLetter(idx){
+  var s = '';
+  var n = idx;
+  while(n >= 0){
+    s = String.fromCharCode((n % 26) + 65) + s;
+    n = Math.floor(n / 26) - 1;
+  }
+  return s;
+}
+
 var ID=/^\d{5}-\d{6,}(?:-\d+)*$/,CRS=/\d{5}K\d{2}[A-Z]?\d{4}/;
 
 /* Tab switcher */
@@ -375,6 +677,31 @@ function isDate(v){return isSer(v)||v instanceof Date||/^\d{1,2}\/\d{1,2}\/\d{4}
 function fDate(v){if(v instanceof Date)return p2(v.getDate())+'/'+p2(v.getMonth()+1)+'/'+v.getFullYear();if(isSer(v)){var d=new Date(Math.round((v-25569)*864e5));return p2(d.getUTCDate())+'/'+p2(d.getUTCMonth()+1)+'/'+d.getUTCFullYear()}var m=String(v).trim().match(/^(\d+)\/(\d+)\/(\d+)$/);return m?p2(m[1])+'/'+p2(m[2])+'/'+m[3]:String(v).trim()}
 function tm(v){if(typeof v==='number'){if(!(v>0&&v<1))return'';var s=Math.round(v*86400);return p2(s/3600|0)+':'+p2(s%3600/60|0)+':'+p2(s%60)}if(v instanceof Date)return'';var m=String(v).trim().match(/^(\d+)\s*[h:]\s*(\d+)(?:\s*[p:]\s*(\d+))?/i);return m?p2(m[1])+':'+p2(m[2])+':'+p2(m[3]||0):''}
 function secs(t){var m=String(t).match(/^(\d+):(\d+):(\d+)$/);return m?+m[1]*3600+ +m[2]*60+ +m[3]:0}
+
+/* Tương tác chọn ô Excel (Active cell highlight & Formula bar update) */
+function bindCellSelection(tableId, nameBoxId, formulaInputId){
+  var table = $(tableId);
+  if(!table) return;
+  table.addEventListener('click', function(e){
+    var td = e.target.closest('td');
+    if(!td || td.classList.contains('row-num-cell')) return;
+    table.querySelectorAll('td.cell-active').forEach(function(c){c.classList.remove('cell-active')});
+    td.classList.add('cell-active');
+    
+    var colLetter = td.getAttribute('data-col') || 'A';
+    var rowNum = td.getAttribute('data-row') || '1';
+    var cellPos = colLetter + rowNum;
+    
+    var nameBox = $(nameBoxId);
+    var formulaInput = $(formulaInputId);
+    if(nameBox) nameBox.textContent = cellPos;
+    if(formulaInput) formulaInput.value = td.getAttribute('data-val') || td.textContent.trim();
+  });
+}
+
+bindCellSelection('table-report', 'report-name-box', 'report-formula-val');
+bindCellSelection('table-course', 'course-name-box', 'course-formula-val');
+bindCellSelection('table-summary', 'summary-name-box', 'summary-formula-val');
 
 /* =========================================================
    TAB 1: BÁO CÁO HẾT KHÓA (GỘP VIETTEL + ECOTEK)
@@ -474,14 +801,45 @@ function renderMergeList(){
     return norm(r.name).indexOf(q)!==-1 || String(r.id).indexOf(searchTerm.trim())!==-1 || String(r.dob).indexOf(searchTerm.trim())!==-1;
   });
   $('rs').textContent='Đã gộp '+V.list.length+' học viên Viettel với '+E.list.length+' học viên Ecotek'+(searchTerm?(' · tìm thấy '+L.length+' kết quả'):'');
+  
+  var reportCols = ['STT', 'Họ và tên', 'Mã học viên', 'Ngày sinh', 'Thời gian', 'Số nội dung', 'Kết quả', 'Cabin'];
+  
+  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Headers
+  var theadHtml = '<tr class="excel-col-letters"><th class="corner-cell">◿</th>' + reportCols.map(function(h, idx){
+    return '<th title="Cột ' + toColLetter(idx) + '">' + toColLetter(idx) + '</th>';
+  }).join('') + '</tr>';
+  
+  theadHtml += '<tr class="excel-field-headers"><th class="row-idx-corner">#</th>' + reportCols.map(function(h){
+    return '<th title="' + esc(h) + '">' + esc(h) + '</th>';
+  }).join('') + '</tr>';
+  $('report-th').innerHTML = theadHtml;
+
   if(!L.length){
-    $('tb').innerHTML='<tr><td colspan="8" class="empty-table">Không tìm thấy học viên phù hợp với bộ lọc/tìm kiếm.</td></tr>';
+    $('tb').innerHTML='<tr><td colspan="9" class="empty-table">Không tìm thấy học viên phù hợp với bộ lọc/tìm kiếm.</td></tr>';
+    $('report-sheet-status').textContent = '0 kết quả';
     return;
   }
-  $('tb').innerHTML=L.map(function(r){
+
+  $('tb').innerHTML=L.map(function(r, rowIndex){
+    var rowNum = rowIndex + 1;
     var tag=r.cabin==='Cabin Viettel'?'<span class="tag v">Cabin Viettel</span>':r.cabin?'<span class="tag e">Cabin Ecotek</span>':'<span class="tag n">Không đáp ứng</span>';
-    return'<tr'+(r.chg?' class="chg"':'')+'><td class="num">'+r.stt+'</td><td title="'+esc(r.name)+'"><b>'+esc(r.name)+'</b></td><td class="num">'+esc(r.id)+'</td><td class="num">'+esc(r.dob)+'</td><td class="num">'+(r.old?'<span class="old">'+r.old.time+'</span>':'')+(r.timeRaw||r.time)+'</td><td class="num">'+(r.old?'<span class="old">'+r.old.n+'</span>':'')+r.n+'</td><td>'+(r.ok?'Đáp ứng':'Không đáp ứng')+'</td><td>'+tag+'</td></tr>';
+    var timeDisplay = (r.old?'<span class="old">'+r.old.time+'</span>':'')+(r.timeRaw||r.time);
+    var nDisplay = (r.old?'<span class="old">'+r.old.n+'</span>':'')+r.n;
+    var okDisplay = r.ok?'Đáp ứng':'Không đáp ứng';
+    
+    return '<tr' + (r.chg?' class="chg"':'') + '>'
+      + '<td class="row-num-cell">' + rowNum + '</td>'
+      + '<td class="num" data-col="A" data-row="' + rowNum + '" data-val="' + r.stt + '" style="text-align:center">' + r.stt + '</td>'
+      + '<td data-col="B" data-row="' + rowNum + '" data-val="' + esc(r.name) + '" title="' + esc(r.name) + '" style="font-weight:600">' + esc(r.name) + '</td>'
+      + '<td class="num" data-col="C" data-row="' + rowNum + '" data-val="' + esc(r.id) + '" style="text-align:center">' + esc(r.id) + '</td>'
+      + '<td class="num" data-col="D" data-row="' + rowNum + '" data-val="' + esc(r.dob) + '" style="text-align:center">' + esc(r.dob) + '</td>'
+      + '<td class="num" data-col="E" data-row="' + rowNum + '" data-val="' + (r.timeRaw||r.time) + '" style="text-align:center">' + timeDisplay + '</td>'
+      + '<td class="num" data-col="F" data-row="' + rowNum + '" data-val="' + r.n + '" style="text-align:center">' + nDisplay + '</td>'
+      + '<td data-col="G" data-row="' + rowNum + '" data-val="' + okDisplay + '" style="text-align:center">' + okDisplay + '</td>'
+      + '<td data-col="H" data-row="' + rowNum + '" data-val="' + (r.cabin||'Không đáp ứng') + '" style="text-align:center">' + tag + '</td>'
+      + '</tr>';
   }).join('');
+  $('report-sheet-status').textContent = 'Hiển thị ' + L.length + ' / ' + RES.length + ' dòng dữ liệu';
 }
 
 /* Xuất Excel Báo Cáo */
@@ -511,20 +869,20 @@ $('exp').addEventListener('click',async function(){
       var dr=ws.getRow(rn);
       if(cT&&r.chg)dr.getCell(cT).value=r.timeRaw||r.time;
       if(cN&&r.chg)dr.getCell(cN).value=r.n;
-      if(cS&&r.chg)dr.getCell(cS).value='Đáp ứng';
-      var c=dr.getCell(cC);c.value=r.cabin||null;
-      var sc=dr.getCell(cS||cC-1);if(sc.style)c.style=JSON.parse(JSON.stringify(sc.style))});
-    var name='BaoCaoKhoaHoc_'+(V.course||'HetKhoa')+'_HetKhoa.xlsx';
-    await saveFile(new Blob([await wb.xlsx.writeBuffer()],{type:'application/octet-stream'}),name);
-    msgReport('Đã xuất "'+name+'" gồm '+RES.length+' học viên.',true);
-  }catch(e){if(!e||e.code!=='declined')msgReport('Không xuất được file: '+((e&&e.message)||''),false)}
+      var cc=dr.getCell(cC);cc.value=r.cabin;if(ref.style)cc.style=JSON.parse(JSON.stringify(ref.style));
+    });
+    var expName = 'BaoCaoCabin_' + (V.course ? V.course.replace(/[^a-zA-Z0-9_-]/g,'_') : 'Gop') + '.xlsx';
+    await saveFile(new Blob([await wb.xlsx.writeBuffer()],{type:'application/octet-stream'}), expName);
+    msgReport('Đã xuất thành công file "' + expName + '".', true);
+  }catch(e){
+    if(!e||e.code!=='declined')msgReport('Không xuất được file: '+(e&&e.message||''),false);
+  }
 });
 
-
 /* =========================================================
-   TAB 2: THÔNG TIN KHÓA HỌC (TRA CỨU THEO TỪNG FILE)
+   TAB 2: THÔNG TIN KHÓA HỌC (TỪNG FILE RIÊNG LẺ)
    ========================================================= */
-var courseData = {courseName:'', headers:[], rows:[], fileName:''};
+var courseData = {fileName:'', courseName:'', sheetName:'Sheet1', headers:[], rows:[]};
 var courseSearchTerm = '';
 
 function msgCourse(t,ok){var m=$('msg-course');m.textContent=t;m.className='msg show '+(ok?'ok':'err')}
@@ -542,13 +900,15 @@ function loadCourseFile(file){
   if(typeof XLSX==='undefined'){msgCourse('Không tải được thư viện đọc Excel. Kiểm tra mạng và thử lại.',false);return}
   var name = file.name || 'khoa-hoc.xlsx';
   courseData.fileName = name;
-  $('tc').textContent = 'Đang đọc file: ' + name + '...';
+  $('tc').textContent = 'Đang đọc bảng tính: ' + name + '...';
   
   file.arrayBuffer().then(function(buf){
     try{
       var wb = XLSX.read(new Uint8Array(buf),{type:'array',cellDates:false});
       var raw = [];
       var detectedCourse = (name.match(CRS)||[''])[0];
+      var firstSheet = wb.SheetNames[0] || 'Sheet1';
+      courseData.sheetName = firstSheet;
       
       wb.SheetNames.forEach(function(sheetName){
         var sheet = wb.Sheets[sheetName];
@@ -640,6 +1000,7 @@ function loadCourseFile(file){
       $('c-cols').textContent = headers.length;
       $('course-title').textContent = detectedCourse ? ('Khóa ' + detectedCourse) : 'Danh sách thông tin khóa học';
       $('course-meta').textContent = 'File "' + name + '" gồm ' + dataRows.length + ' học viên · ' + headers.length + ' cột dữ liệu';
+      $('course-sheet-tab-name').textContent = '📋 ' + (firstSheet || 'Sheet1');
 
       $('course-res').style.display='block';
       renderCourseTable();
@@ -670,22 +1031,42 @@ function renderCourseTable(){
     });
   });
 
-  var theadHtml = '<tr>' + headers.map(function(h){return '<th title="' + esc(h) + '">' + esc(h) + '</th>';}).join('') + '</tr>';
+  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Headers
+  var theadHtml = '<tr class="excel-col-letters"><th class="corner-cell">◿</th>' + headers.map(function(h, idx){
+    return '<th title="Cột ' + toColLetter(idx) + '">' + toColLetter(idx) + '</th>';
+  }).join('') + '</tr>';
+  
+  theadHtml += '<tr class="excel-field-headers"><th class="row-idx-corner">#</th>' + headers.map(function(h){
+    return '<th title="' + esc(h) + '">' + esc(h) + '</th>';
+  }).join('') + '</tr>';
   $('course-th').innerHTML = theadHtml;
 
   if(!filtered.length){
-    $('course-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length, 1) + '" class="empty-table">Không tìm thấy thông tin phù hợp với từ khóa "' + esc(courseSearchTerm) + '".</td></tr>';
+    $('course-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length + 1, 1) + '" class="empty-table">Không tìm thấy thông tin phù hợp với từ khóa "' + esc(courseSearchTerm) + '".</td></tr>';
+    $('course-sheet-status').textContent = '0 kết quả';
   } else {
     var tbodyHtml = filtered.map(function(r, rowIndex){
-      return '<tr>' + headers.map(function(h, idx){
+      var rowNum = rowIndex + 1;
+      var cellsHtml = headers.map(function(h, idx){
+        var colLetter = toColLetter(idx);
         var val = r[idx] != null ? String(r[idx]).trim() : '';
         var isNumeric = /^\d+$/.test(val) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val);
         var isStt = idx === 0 || /^stt$/i.test(norm(h));
-        var displayVal = isStt ? (rowIndex + 1) : val;
-        return '<td' + (isNumeric ? ' class="num"' : '') + ' title="' + esc(displayVal) + '">' + esc(displayVal) + '</td>';
-      }).join('') + '</tr>';
+        var displayVal = isStt ? String(rowNum) : val;
+        var alignStyle = isStt ? 'text-align:center;' : (isNumeric ? 'text-align:center;' : '');
+        var boldStyle = (/họ\s*tên|họ\s*và\s*tên/i.test(norm(h))) ? 'font-weight:600;' : '';
+        
+        return '<td' + (isNumeric ? ' class="num"' : '') 
+          + ' data-col="' + colLetter + '" data-row="' + rowNum + '" data-val="' + esc(displayVal) + '"'
+          + ' style="' + alignStyle + boldStyle + '" title="' + esc(displayVal) + '">' 
+          + esc(displayVal) + '</td>';
+      }).join('');
+      
+      return '<tr><td class="row-num-cell">' + rowNum + '</td>' + cellsHtml + '</tr>';
     }).join('');
+    
     $('course-tb').innerHTML = tbodyHtml;
+    $('course-sheet-status').textContent = 'Hiển thị ' + filtered.length + ' / ' + rows.length + ' dòng dữ liệu';
   }
 
   $('course-meta').textContent = 'Tổng ' + rows.length + ' học viên' + (courseSearchTerm ? (' · Đang hiển thị ' + filtered.length + ' kết quả phù hợp') : '');
@@ -727,8 +1108,8 @@ $('course-exp').addEventListener('click', async function(){
     // Header
     var headerRow = ws.addRow(courseData.headers);
     headerRow.eachCell(function(cell){
-      cell.font = {bold: true, color: {argb: 'FFFFFFFF'}};
-      cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF22303C'}};
+      cell.font = {bold: true, color: {argb: 'FFFFFFFF'}, size: 11};
+      cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF107C41'}};
       cell.alignment = {vertical: 'middle', horizontal: 'center'};
     });
     
@@ -740,7 +1121,15 @@ $('course-exp').addEventListener('click', async function(){
         }
         return r[idx] || '';
       });
-      ws.addRow(rowValues);
+      var row = ws.addRow(rowValues);
+      row.eachCell(function(cell, colNum){
+        cell.border = {
+          top: {style:'thin', color:{argb:'FFD1D5DB'}},
+          left: {style:'thin', color:{argb:'FFD1D5DB'}},
+          bottom: {style:'thin', color:{argb:'FFD1D5DB'}},
+          right: {style:'thin', color:{argb:'FFD1D5DB'}}
+        };
+      });
     });
 
     // Auto column widths
@@ -761,59 +1150,25 @@ $('course-exp').addEventListener('click', async function(){
   }
 });
 
-
 /* =========================================================
-   TAB 3: BÁO CÁO TỔNG (TỰ ĐỘNG GỘP VÀ CẬP NHẬT NHIỀU LỚP)
+   TAB 3: BÁO CÁO TỔNG (TỰ ĐỘNG GỘP NHIỀU LỚP/FILE)
    ========================================================= */
 var summaryStore = {
+  files: [],
+  headers: [],
+  rows: [],
   courses: [],
-  files: [],         // [{ name: 'Lop1.xlsx', count: 35, course: '...' }]
-  headers: [],       // ['STT', 'Họ và tên', 'Mã HV', ...]
-  rows: [],          // [ ['1', 'Nguyen Van A', ...], ...]
-  studentKeyMap: {}  // { 'key': rowIndex }
+  studentKeyMap: {}
 };
 var summarySearchTerm = '';
 
 function msgSummary(t,ok){var m=$('msg-summary');m.textContent=t;m.className='msg show '+(ok?'ok':'err')}
 
-/* Trích xuất khóa nhận dạng duy nhất cho từng học viên */
-function getStudentKey(row, headers){
-  var id = '', name = '', dob = '', cccd = '';
-  headers.forEach(function(h, idx){
-    var nh = norm(h);
-    var val = String(row[idx]||'').trim();
-    if(!val) return;
-    if(/mã\s*hv|mã\s*học\s*viên|student\s*id/i.test(nh)){
-      id = val;
-    } else if(/cccd|cmnd|căn\s*cước|chứng\s*minh/i.test(nh)){
-      cccd = val;
-    } else if(/họ\s*tên|họ\s*và\s*tên|tên\s*học\s*viên/i.test(nh)){
-      name = norm(val);
-    } else if(/ngày\s*sinh|năm\s*sinh|dob/i.test(nh)){
-      dob = norm(val);
-    }
-  });
-
-  if(id && (ID.test(id) || id.length >= 4)){
-    return 'id:' + id;
-  }
-  if(cccd && cccd.length >= 9){
-    return 'cccd:' + cccd;
-  }
-  if(name && dob){
-    return 'namedob:' + name + '|' + dob;
-  }
-  if(name){
-    return 'name:' + name;
-  }
-  return '';
-}
-
 function bindSummaryDrop(){
   var inp = $('fs'), box = $('ds');
   inp.addEventListener('change', function(){
     if(inp.files && inp.files.length){
-      loadMultipleSummaryFiles(Array.from(inp.files));
+      loadSummaryFiles(Array.from(inp.files));
     }
     inp.value = '';
   });
@@ -823,97 +1178,118 @@ function bindSummaryDrop(){
     e.preventDefault();
     box.classList.remove('over');
     if(e.dataTransfer.files && e.dataTransfer.files.length){
-      loadMultipleSummaryFiles(Array.from(e.dataTransfer.files));
+      loadSummaryFiles(Array.from(e.dataTransfer.files));
     }
   });
 
   var addMoreBtn = $('summary-add-more');
   if(addMoreBtn){
-    addMoreBtn.addEventListener('click', function(){
-      inp.click();
-    });
+    addMoreBtn.addEventListener('click', function(){ inp.click(); });
   }
 
   var resetBtn = $('summary-reset');
   if(resetBtn){
     resetBtn.addEventListener('click', function(){
-      if(!summaryStore.rows.length || confirm('Bạn có chắc chắn muốn xóa Báo cáo tổng hiện tại để nạp lại từ đầu?')){
-        resetSummaryStore();
-      }
+      if(summaryStore.rows.length && !confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu báo cáo tổng để làm mới?')) return;
+      summaryStore = { files: [], headers: [], rows: [], courses: [], studentKeyMap: {} };
+      $('summary-res').style.display = 'none';
+      $('ds').classList.remove('ready');
+      $('ts').textContent = 'Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động thêm học viên vào báo cáo tổng';
+      msgSummary('Đã làm mới báo cáo tổng.', true);
     });
   }
 }
 bindSummaryDrop();
 
-function resetSummaryStore(){
-  summaryStore = {courses: [], files: [], headers: [], rows: [], studentKeyMap: {}};
-  summarySearchTerm = '';
-  if($('summary-search')) $('summary-search').value = '';
-  $('ds').classList.remove('ready');
-  $('ts').textContent = 'Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động thêm học viên vào báo cáo tổng';
-  $('summary-res').style.display = 'none';
-  msgSummary('Đã làm mới Báo cáo tổng.', true);
+function getStudentKey(row, headers){
+  var idVal = '', cccdVal = '', nameVal = '', dobVal = '';
+  headers.forEach(function(h, idx){
+    var hn = norm(h);
+    var val = String(row[idx]||'').trim();
+    if(!val) return;
+    if(/mã\s*học\s*viên|mã\s*hv/i.test(hn) || ID.test(val)){
+      idVal = val;
+    } else if(/cccd|cmnd|căn\s*cước|chứng\s*minh/i.test(hn) || /^\d{9,12}$/.test(val)){
+      cccdVal = val;
+    } else if(/họ\s*tên|họ\s*và\s*tên/i.test(hn)){
+      nameVal = norm(val);
+    } else if(/ngày\s*sinh|năm\s*sinh|dob/i.test(hn)){
+      dobVal = val;
+    }
+  });
+
+  if(idVal) return 'id:' + idVal;
+  if(cccdVal) return 'cccd:' + cccdVal;
+  if(nameVal && dobVal) return 'namedob:' + nameVal + '|' + dobVal;
+  if(nameVal) return 'name:' + nameVal;
+  return '';
 }
 
-async function loadMultipleSummaryFiles(files){
+async function loadSummaryFiles(files){
   if(typeof XLSX === 'undefined'){
     msgSummary('Không tải được thư viện đọc Excel. Kiểm tra mạng và thử lại.', false);
     return;
   }
   
-  var validFiles = files.filter(function(f){ return /\.(xlsx|xls|csv)$/i.test(f.name); });
-  if(!validFiles.length){
-    msgSummary('Vui lòng chọn file định dạng Excel (.xlsx, .xls) hoặc .csv', false);
+  var excelFiles = files.filter(function(f){
+    return /\.(xlsx|xls|csv)$/i.test(f.name);
+  });
+  
+  if(!excelFiles.length){
+    msgSummary('Vui lòng chọn các file Excel hợp lệ (.xlsx, .xls, .csv).', false);
     return;
   }
 
+  $('ts').textContent = 'Đang xử lý ' + excelFiles.length + ' file Excel...';
+  
   var totalAdded = 0;
   var totalUpdated = 0;
 
-  for(var i = 0; i < validFiles.length; i++){
-    var f = validFiles[i];
-    $('ts').textContent = 'Đang xử lý (' + (i + 1) + '/' + validFiles.length + '): ' + f.name + '...';
-    try {
-      var res = await processSingleSummaryFile(f);
+  for(var i = 0; i < excelFiles.length; i++){
+    var file = excelFiles[i];
+    try{
+      var res = await parseCourseFileSummary(file);
       totalAdded += res.added;
       totalUpdated += res.updated;
-    } catch(e){
-      console.error(e);
+    } catch(err){
+      console.error(err);
+      msgSummary('Lỗi khi đọc file "' + file.name + '": ' + (err && err.message || ''), false);
     }
   }
 
   if(summaryStore.rows.length > 0){
     $('ds').classList.add('ready');
-    $('ts').textContent = 'Đã nạp ' + summaryStore.files.length + ' file/lớp · Tổng ' + summaryStore.rows.length + ' học viên. (Bấm hoặc kéo thả để tiếp tục thêm/cập nhật)';
+    $('ts').textContent = 'Đã tổng hợp ' + summaryStore.files.length + ' file · ' + summaryStore.rows.length + ' học viên';
     $('summary-res').style.display = 'block';
+    
     updateSummaryStats();
     renderSummaryTable();
 
-    var msgParts = [];
-    if(totalAdded > 0) msgParts.push('thêm mới ' + totalAdded + ' học viên');
-    if(totalUpdated > 0) msgParts.push('cập nhật thông tin ' + totalUpdated + ' học viên đã có');
-    if(!msgParts.length) msgParts.push('dữ liệu học viên đã trùng khớp hoàn toàn');
-
-    msgSummary('Đã xử lý xong: ' + msgParts.join(', ') + ' (Tổng hiện tại: ' + summaryStore.rows.length + ' học viên từ ' + summaryStore.files.length + ' file/lớp).', true);
+    var msgText = 'Đã xử lý xong: Thêm mới ' + totalAdded + ' học viên';
+    if(totalUpdated > 0){
+      msgText += ', cập nhật lại thông tin ' + totalUpdated + ' học viên đã có';
+    }
+    msgText += '. Tổng cộng hiện có ' + summaryStore.rows.length + ' học viên trong báo cáo tổng.';
+    msgSummary(msgText, true);
   }
 }
 
-function processSingleSummaryFile(file){
+function parseCourseFileSummary(file){
   return new Promise(function(resolve, reject){
-    var name = file.name || 'khoa-hoc.xlsx';
+    var name = file.name;
     file.arrayBuffer().then(function(buf){
-      try {
-        var wb = XLSX.read(new Uint8Array(buf), {type:'array', cellDates:false});
+      try{
+        var wb = XLSX.read(new Uint8Array(buf),{type:'array',cellDates:false});
         var raw = [];
         var detectedCourse = (name.match(CRS)||[''])[0];
-
+        
         wb.SheetNames.forEach(function(sheetName){
           var sheet = wb.Sheets[sheetName];
           if(!sheet) return;
-          var sheetRows = XLSX.utils.sheet_to_json(sheet, {header:1, raw:false, defval:''});
+          var sheetRows = XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''});
           sheetRows.forEach(function(r){
-            var row = r.map(function(c){ return c == null ? '' : String(c).trim(); });
-            if(row.some(function(v){ return v.length > 0; })){
+            var row = r.map(function(c){return c==null?'':String(c).trim()});
+            if(row.some(function(v){return v.length>0})){
               raw.push(row);
               if(!detectedCourse){
                 row.forEach(function(cell){
@@ -930,19 +1306,16 @@ function processSingleSummaryFile(file){
         });
 
         if(!raw.length){
-          msgSummary('File "' + name + '" trống hoặc không có dữ liệu.', false);
           resolve({added:0, updated:0});
           return;
         }
 
-        // 1. Xác định dòng Header
         var headIndex = raw.findIndex(function(r){
-          return r.some(function(v){ return /họ\s*tên|họ\s*và\s*tên|mã\s*hv|mã\s*học\s*viên|ngày\s*sinh|cccd|cmnd|stt|số\s*tt/i.test(v); });
+          return r.some(function(v){return /họ\s*tên|họ\s*và\s*tên|mã\s*hv|mã\s*học\s*viên|ngày\s*sinh|cccd|cmnd|stt|số\s*tt/i.test(v)})
         });
         if(headIndex === -1) headIndex = 0;
         var headerRow = raw[headIndex];
 
-        // 2. Tìm cột cuối cùng thực sự có dữ liệu
         var dataRowsRaw = raw.slice(headIndex + 1);
         var maxCol = 0;
         headerRow.forEach(function(h, idx){
@@ -983,7 +1356,6 @@ function processSingleSummaryFile(file){
           return;
         }
 
-        // 3. THIẾT LẬP HOẶC ĐỒNG BỘ HEADERS
         if(!summaryStore.headers.length){
           summaryStore.headers = fileHeaders.slice();
         }
@@ -991,7 +1363,6 @@ function processSingleSummaryFile(file){
         var sttColIdx = summaryStore.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
         if(sttColIdx === -1 && /^stt$/i.test(norm(summaryStore.headers[0]))) sttColIdx = 0;
 
-        // Map cột của file mới vào cấu trúc header hiện tại
         var colMapping = [];
         fileHeaders.forEach(function(fh, fIdx){
           var normFh = norm(fh);
@@ -1014,11 +1385,9 @@ function processSingleSummaryFile(file){
             }
           });
 
-          // Xác định mã định danh duy nhất của học viên
           var key = getStudentKey(newRow, summaryStore.headers);
 
           if(key && summaryStore.studentKeyMap.hasOwnProperty(key)){
-            // HỌC VIÊN ĐÃ TỒN TẠI: Cập nhật thông tin, KHÔNG tạo thêm dòng mới
             var existingRowIndex = summaryStore.studentKeyMap[key];
             var oldRow = summaryStore.rows[existingRowIndex];
             
@@ -1030,7 +1399,6 @@ function processSingleSummaryFile(file){
             });
             updatedCount++;
           } else {
-            // HỌC VIÊN MỚI: Thêm vào danh sách chung
             var currentTotal = summaryStore.rows.length + 1;
             if(sttColIdx !== -1){
               newRow[sttColIdx] = String(currentTotal);
@@ -1043,7 +1411,6 @@ function processSingleSummaryFile(file){
           }
         });
 
-        // Đánh lại số thứ tự STT chuẩn liên tục từ 1..N
         if(sttColIdx !== -1){
           summaryStore.rows.forEach(function(row, idx){
             row[sttColIdx] = String(idx + 1);
@@ -1103,22 +1470,42 @@ function renderSummaryTable(){
     });
   });
 
-  var theadHtml = '<tr>' + headers.map(function(h){return '<th title="' + esc(h) + '">' + esc(h) + '</th>';}).join('') + '</tr>';
+  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Headers
+  var theadHtml = '<tr class="excel-col-letters"><th class="corner-cell">◿</th>' + headers.map(function(h, idx){
+    return '<th title="Cột ' + toColLetter(idx) + '">' + toColLetter(idx) + '</th>';
+  }).join('') + '</tr>';
+  
+  theadHtml += '<tr class="excel-field-headers"><th class="row-idx-corner">#</th>' + headers.map(function(h){
+    return '<th title="' + esc(h) + '">' + esc(h) + '</th>';
+  }).join('') + '</tr>';
   $('summary-th').innerHTML = theadHtml;
 
   if(!filtered.length){
-    $('summary-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length, 1) + '" class="empty-table">Không tìm thấy thông tin phù hợp với từ khóa "' + esc(summarySearchTerm) + '".</td></tr>';
+    $('summary-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length + 1, 1) + '" class="empty-table">Không tìm thấy thông tin phù hợp với từ khóa "' + esc(summarySearchTerm) + '".</td></tr>';
+    $('summary-sheet-status').textContent = '0 kết quả';
   } else {
     var tbodyHtml = filtered.map(function(r, rowIndex){
-      return '<tr>' + headers.map(function(h, idx){
+      var rowNum = rowIndex + 1;
+      var cellsHtml = headers.map(function(h, idx){
+        var colLetter = toColLetter(idx);
         var val = r[idx] != null ? String(r[idx]).trim() : '';
         var isNumeric = /^\d+$/.test(val) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val);
         var isStt = idx === 0 || /^stt$/i.test(norm(h));
-        var displayVal = isStt ? (rowIndex + 1) : val;
-        return '<td' + (isNumeric ? ' class="num"' : '') + ' title="' + esc(displayVal) + '">' + esc(displayVal) + '</td>';
-      }).join('') + '</tr>';
+        var displayVal = isStt ? String(rowNum) : val;
+        var alignStyle = isStt ? 'text-align:center;' : (isNumeric ? 'text-align:center;' : '');
+        var boldStyle = (/họ\s*tên|họ\s*và\s*tên/i.test(norm(h))) ? 'font-weight:600;' : '';
+        
+        return '<td' + (isNumeric ? ' class="num"' : '') 
+          + ' data-col="' + colLetter + '" data-row="' + rowNum + '" data-val="' + esc(displayVal) + '"'
+          + ' style="' + alignStyle + boldStyle + '" title="' + esc(displayVal) + '">' 
+          + esc(displayVal) + '</td>';
+      }).join('');
+      
+      return '<tr><td class="row-num-cell">' + rowNum + '</td>' + cellsHtml + '</tr>';
     }).join('');
+    
     $('summary-tb').innerHTML = tbodyHtml;
+    $('summary-sheet-status').textContent = 'Hiển thị ' + filtered.length + ' / ' + rows.length + ' dòng dữ liệu';
   }
 
   $('summary-meta').textContent = 'Tổng ' + rows.length + ' học viên từ ' + summaryStore.files.length + ' lớp' + (summarySearchTerm ? (' · Đang hiển thị ' + filtered.length + ' kết quả phù hợp') : '');
@@ -1155,17 +1542,17 @@ $('summary-exp').addEventListener('click', async function(){
     });
 
     var wb = new ExcelJS.Workbook();
-    var ws = wb.addWorksheet('BaoCaoTongHop');
+    var ws = wb.addWorksheet('Báo cáo tổng hợp');
     
     // Header
     var headerRow = ws.addRow(summaryStore.headers);
     headerRow.eachCell(function(cell){
-      cell.font = {bold: true, color: {argb: 'FFFFFFFF'}};
-      cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF22303C'}};
+      cell.font = {bold: true, color: {argb: 'FFFFFFFF'}, size: 11};
+      cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF107C41'}};
       cell.alignment = {vertical: 'middle', horizontal: 'center'};
     });
     
-    // Rows (Đánh lại STT chuẩn 1..N)
+    // Rows
     exportRows.forEach(function(r, rIdx){
       var rowValues = summaryStore.headers.map(function(h, idx){
         if(idx === 0 || /^stt$/i.test(norm(h))){
@@ -1173,7 +1560,15 @@ $('summary-exp').addEventListener('click', async function(){
         }
         return r[idx] || '';
       });
-      ws.addRow(rowValues);
+      var row = ws.addRow(rowValues);
+      row.eachCell(function(cell, colNum){
+        cell.border = {
+          top: {style:'thin', color:{argb:'FFD1D5DB'}},
+          left: {style:'thin', color:{argb:'FFD1D5DB'}},
+          bottom: {style:'thin', color:{argb:'FFD1D5DB'}},
+          right: {style:'thin', color:{argb:'FFD1D5DB'}}
+        };
+      });
     });
 
     // Auto column widths
@@ -1186,10 +1581,10 @@ $('summary-exp').addEventListener('click', async function(){
       col.width = Math.max(maxLen, 12);
     });
 
-    var courseSuffix = summaryStore.courses.length ? summaryStore.courses.join('_') : 'GopCacLop';
-    var expName = 'BaoCaoTongHop_' + courseSuffix.replace(/[^a-zA-Z0-9_-]/g,'_') + '.xlsx';
+    var courseTag = summaryStore.courses.length ? summaryStore.courses.join('_') : 'KimThanh';
+    var expName = 'BaoCaoTongHop_' + courseTag.replace(/[^a-zA-Z0-9_-]/g,'_') + '.xlsx';
     await saveFile(new Blob([await wb.xlsx.writeBuffer()],{type:'application/octet-stream'}), expName);
-    msgSummary('Đã xuất thành công file "' + expName + '" gồm ' + exportRows.length + ' học viên từ ' + summaryStore.files.length + ' lớp.', true);
+    msgSummary('Đã xuất thành công file "' + expName + '" (' + exportRows.length + ' học viên).', true);
   }catch(e){
     if(!e || e.code !== 'declined') msgSummary('Không xuất được file Excel: ' + (e&&e.message||''), false);
   }
