@@ -84,10 +84,13 @@ h1{color:#fff;font-size:26px;margin:0 0 6px;font-weight:700}
 .res-card{margin-top:22px}
 .head{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
 .head h2{margin:0;font-size:17.5px;color:var(--ink)}.head p{margin:3px 0 0;font-size:13px;color:var(--muted)}
+.head-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .btn{border:0;background:var(--asp);color:#fff;font:inherit;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:9px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:background .15s}
 .btn:hover{background:var(--asp2)}.btn:focus-visible,.chip:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
 .btn-secondary{background:var(--paper);color:var(--soft);border:1px solid var(--line)}
 .btn-secondary:hover{background:var(--panel);color:var(--ink);border-color:var(--amber)}
+.btn-danger{background:rgba(180,72,46,.1);color:var(--warn);border:1px solid rgba(180,72,46,.25)}
+.btn-danger:hover{background:var(--warn);color:#fff}
 
 /* Stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
@@ -96,6 +99,11 @@ h1{color:#fff;font-size:26px;margin:0 0 6px;font-weight:700}
 .st p{margin:0 0 6px;font-size:12.5px;color:var(--muted)}
 .st div{font-size:26px;font-weight:700;line-height:1}
 .st.v div{color:var(--blue)}.st.e div{color:var(--eco)}.st.n div{color:var(--warn)}.st.t div{color:var(--amberd)}.st.c div{color:var(--teal)}
+
+/* Class / Files Tags List */
+.file-tags{display:flex;gap:8px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line);background:var(--paper)}
+.file-tag{display:inline-flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:500;color:var(--ink)}
+.file-tag b{color:var(--teal)}
 
 /* Filters & Search */
 .filters{display:flex;gap:6px;flex-wrap:wrap;padding:12px 18px;border-top:1px solid var(--line);background:var(--paper)}
@@ -146,6 +154,8 @@ tr.chg td{background:rgba(122,91,181,.08)}
   h1{font-size:22px}
   .nav-tabs{width:100%;display:flex}
   .nav-tab{flex:1;justify-content:center;padding:8px 10px;font-size:13px}
+  .head-actions{width:100%}
+  .head-actions .btn{flex:1}
 }
 </style>
 </head>
@@ -164,7 +174,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
       </button>
       <button type="button" class="nav-tab" id="tab-btn-course" onclick="setTab('course')">
         <span>🎓 2. Thông tin khóa học</span>
-        <span class="badge" id="course-badge">Tra cứu</span>
+        <span class="badge" id="course-badge">Gộp nhiều lớp</span>
       </button>
     </div>
   </div>
@@ -234,15 +244,15 @@ tr.chg td{background:rgba(122,91,181,.08)}
     </div>
   </div>
 
-  <!-- TAB 2: THÔNG TIN KHÓA HỌC -->
+  <!-- TAB 2: THÔNG TIN KHÓA HỌC (GỘP NHIỀU LỚP/FILE) -->
   <div class="tab-content" id="view-course">
     <div class="card">
       <div class="drop-single">
         <label class="drop single c" id="dc">
-          <input type="file" id="fc" accept=".xlsx,.xls,.csv">
+          <input type="file" id="fc" accept=".xlsx,.xls,.csv" multiple>
           <div class="icon">📁</div>
-          <b>Tải file thông tin khóa học</b>
-          <span id="tc">Bấm vào đây hoặc kéo thả file Excel (.xlsx, .xls, .csv) danh sách khóa học</span>
+          <b id="course-drop-title">Tải hoặc thêm file Excel các lớp</b>
+          <span id="tc">Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động cộng dồn học viên vào danh sách chung</span>
         </label>
       </div>
       <div class="msg" id="msg-course" role="status"></div>
@@ -251,21 +261,28 @@ tr.chg td{background:rgba(122,91,181,.08)}
     <div class="card res-card" id="course-res" style="display:none">
       <div class="head">
         <div>
-          <h2 id="course-title">Thông tin khóa học</h2>
-          <p id="course-meta">Đã tải danh sách học viên</p>
+          <h2 id="course-title">Danh sách học viên gộp</h2>
+          <p id="course-meta">Đã gộp dữ liệu các lớp</p>
         </div>
-        <button class="btn" id="course-exp" type="button">⬇ Xuất danh sách Excel</button>
+        <div class="head-actions">
+          <button class="btn btn-secondary" id="course-add-more" type="button">➕ Thêm lớp / file khác</button>
+          <button class="btn btn-danger" id="course-reset" type="button">🗑️ Xóa làm mới</button>
+          <button class="btn" id="course-exp" type="button">⬇ Xuất danh sách Excel</button>
+        </div>
       </div>
       
-      <div class="stats cols-3">
-        <div class="st c"><p>Mã khóa học</p><div id="c-code" style="font-size:20px;font-weight:700">---</div></div>
+      <div class="stats">
+        <div class="st c"><p>Số file / lớp đã gộp</p><div class="num" id="c-files-count">0</div></div>
         <div class="st t"><p>Tổng số học viên</p><div class="num" id="c-total">0</div></div>
+        <div class="st v"><p>Khóa học</p><div id="c-code" style="font-size:18px;font-weight:700">---</div></div>
         <div class="st e"><p>Số cột thông tin</p><div class="num" id="c-cols">0</div></div>
       </div>
 
+      <div class="file-tags" id="course-files-list"></div>
+
       <div class="search-bar">
         <div class="search-wrap">
-          <input id="course-search" type="search" placeholder="Tìm kiếm theo bất kỳ thông tin nào (Họ tên, CCCD, Mã HV, Ngày sinh...)..." aria-label="Tìm thông tin khóa học">
+          <input id="course-search" type="search" placeholder="Tìm kiếm nhanh trong tất cả các lớp (Họ tên, CCCD, Mã HV, Ngày sinh...)..." aria-label="Tìm thông tin khóa học">
         </div>
         <button class="clear-btn" id="course-clear-search" type="button">Xóa tìm</button>
       </div>
@@ -422,7 +439,7 @@ async function saveFile(blob,name){
 }
 $('exp').addEventListener('click',async function(){
   if(!RES.length||!vBuf)return;
-  if(typeof ExcelJS==='undefined'){msgReport('Không tải được thư viện xuất Excel. Kiểm tra mạng và thử lại.',false);return}
+  if(typeof ExcelJS==='undefined'){msgReport('Không tải được thư viện xuất Excel. Kiểm tra mạng và thư lại.',false);return}
   try{
     var wb=new ExcelJS.Workbook();await wb.xlsx.load(vBuf);
     var ws=wb.worksheets[0],hr=0,cT=0,cN=0,cS=0,cC=0,lastC=0,cI=0;
@@ -452,147 +469,266 @@ $('exp').addEventListener('click',async function(){
 
 
 /* =========================================================
-   TAB 2: THÔNG TIN KHÓA HỌC
+   TAB 2: THÔNG TIN KHÓA HỌC (TỰ ĐỘNG GỘP NHIỀU LỚP/FILE)
    ========================================================= */
-var courseData = {courseName:'', headers:[], rows:[], fileName:''};
+var courseStore = {
+  courses: [],
+  files: [],      // [{ name: 'Lop1.xlsx', count: 35, course: '...' }]
+  headers: [],    // ['STT', 'Họ và tên', 'Mã HV', ...]
+  rows: [],       // [ ['1', 'Nguyen Van A', ...], ...]
+  studentKeys: {} // để kiểm tra tránh trùng lặp nếu cần
+};
 var courseSearchTerm = '';
 
 function msgCourse(t,ok){var m=$('msg-course');m.textContent=t;m.className='msg show '+(ok?'ok':'err')}
 
 function bindCourseDrop(){
   var inp = $('fc'), box = $('dc');
-  inp.addEventListener('change', function(){if(inp.files[0])loadCourseFile(inp.files[0]); inp.value='';});
+  inp.addEventListener('change', function(){
+    if(inp.files && inp.files.length){
+      loadMultipleCourseFiles(Array.from(inp.files));
+    }
+    inp.value = '';
+  });
   box.addEventListener('dragover', function(e){e.preventDefault(); box.classList.add('over');});
   box.addEventListener('dragleave', function(){box.classList.remove('over');});
-  box.addEventListener('drop', function(e){e.preventDefault(); box.classList.remove('over'); var f=e.dataTransfer.files[0]; if(f)loadCourseFile(f);});
+  box.addEventListener('drop', function(e){
+    e.preventDefault();
+    box.classList.remove('over');
+    if(e.dataTransfer.files && e.dataTransfer.files.length){
+      loadMultipleCourseFiles(Array.from(e.dataTransfer.files));
+    }
+  });
+
+  var addMoreBtn = $('course-add-more');
+  if(addMoreBtn){
+    addMoreBtn.addEventListener('click', function(){
+      inp.click();
+    });
+  }
+
+  var resetBtn = $('course-reset');
+  if(resetBtn){
+    resetBtn.addEventListener('click', function(){
+      if(!courseStore.rows.length || confirm('Bạn có chắc chắn muốn xóa danh sách hiện tại để nạp lại từ đầu?')){
+        resetCourseStore();
+      }
+    });
+  }
 }
 bindCourseDrop();
 
-function loadCourseFile(file){
-  if(typeof XLSX==='undefined'){msgCourse('Không tải được thư viện đọc Excel. Kiểm tra mạng và thử lại.',false);return}
-  var name = file.name || 'khoa-hoc.xlsx';
-  courseData.fileName = name;
-  $('tc').textContent = 'Đang đọc file: ' + name + '...';
+function resetCourseStore(){
+  courseStore = {courses: [], files: [], headers: [], rows: [], studentKeys: {}};
+  courseSearchTerm = '';
+  if($('course-search')) $('course-search').value = '';
+  $('dc').classList.remove('ready');
+  $('tc').textContent = 'Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động cộng dồn học viên vào danh sách chung';
+  $('course-res').style.display = 'none';
+  msgCourse('Đã làm mới danh sách.', true);
+}
+
+async function loadMultipleCourseFiles(files){
+  if(typeof XLSX === 'undefined'){
+    msgCourse('Không tải được thư viện đọc Excel. Kiểm tra mạng và thử lại.', false);
+    return;
+  }
   
-  file.arrayBuffer().then(function(buf){
-    try{
-      var wb = XLSX.read(new Uint8Array(buf),{type:'array',cellDates:false});
-      var raw = [];
-      var detectedCourse = (name.match(CRS)||[''])[0];
-      
-      wb.SheetNames.forEach(function(sheetName){
-        var sheet = wb.Sheets[sheetName];
-        if(!sheet) return;
-        var sheetRows = XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''});
-        sheetRows.forEach(function(r){
-          var row = r.map(function(c){return c==null?'':String(c).trim()});
-          if(row.some(function(v){return v.length>0})){
-            raw.push(row);
-            if(!detectedCourse){
-              row.forEach(function(cell){
-                var m = cell.match(CRS);
-                if(m) detectedCourse = m[0];
-                else if(/khóa|khoá/i.test(cell) && cell.length < 40){
-                  var cm = cell.match(/[Kk]\s*(\d+[A-Za-z0-9\/-]*)/);
-                  if(cm) detectedCourse = cm[0].toUpperCase();
-                }
-              });
+  var validFiles = files.filter(function(f){ return /\.(xlsx|xls|csv)$/i.test(f.name); });
+  if(!validFiles.length){
+    msgCourse('Vui lòng chọn file định dạng Excel (.xlsx, .xls) hoặc .csv', false);
+    return;
+  }
+
+  var totalAdded = 0;
+  for(var i = 0; i < validFiles.length; i++){
+    var f = validFiles[i];
+    $('tc').textContent = 'Đang xử lý (' + (i + 1) + '/' + validFiles.length + '): ' + f.name + '...';
+    try {
+      var added = await processSingleCourseFile(f);
+      totalAdded += added;
+    } catch(e){
+      console.error(e);
+    }
+  }
+
+  if(courseStore.rows.length > 0){
+    $('dc').classList.add('ready');
+    $('tc').textContent = 'Đã gộp ' + courseStore.files.length + ' file/lớp · Tổng ' + courseStore.rows.length + ' học viên. (Bấm hoặc kéo thả để tiếp tục thêm lớp)';
+    $('course-res').style.display = 'block';
+    updateCourseStats();
+    renderCourseTable();
+    msgCourse('Đã nạp và gộp thành công ' + totalAdded + ' học viên mới (Tổng cộng: ' + courseStore.rows.length + ' học viên từ ' + courseStore.files.length + ' lớp).', true);
+  }
+}
+
+function processSingleCourseFile(file){
+  return new Promise(function(resolve, reject){
+    var name = file.name || 'khoa-hoc.xlsx';
+    file.arrayBuffer().then(function(buf){
+      try {
+        var wb = XLSX.read(new Uint8Array(buf), {type:'array', cellDates:false});
+        var raw = [];
+        var detectedCourse = (name.match(CRS)||[''])[0];
+
+        wb.SheetNames.forEach(function(sheetName){
+          var sheet = wb.Sheets[sheetName];
+          if(!sheet) return;
+          var sheetRows = XLSX.utils.sheet_to_json(sheet, {header:1, raw:false, defval:''});
+          sheetRows.forEach(function(r){
+            var row = r.map(function(c){ return c == null ? '' : String(c).trim(); });
+            if(row.some(function(v){ return v.length > 0; })){
+              raw.push(row);
+              if(!detectedCourse){
+                row.forEach(function(cell){
+                  var m = cell.match(CRS);
+                  if(m) detectedCourse = m[0];
+                  else if(/khóa|khoá/i.test(cell) && cell.length < 40){
+                    var cm = cell.match(/[Kk]\s*(\d+[A-Za-z0-9\/-]*)/);
+                    if(cm) detectedCourse = cm[0].toUpperCase();
+                  }
+                });
+              }
+            }
+          });
+        });
+
+        if(!raw.length){
+          msgCourse('File "' + name + '" trống hoặc không có dữ liệu.', false);
+          resolve(0);
+          return;
+        }
+
+        // 1. Xác định dòng Header
+        var headIndex = raw.findIndex(function(r){
+          return r.some(function(v){ return /họ\s*tên|họ\s*và\s*tên|mã\s*hv|mã\s*học\s*viên|ngày\s*sinh|cccd|cmnd|stt|số\s*tt/i.test(v); });
+        });
+        if(headIndex === -1) headIndex = 0;
+        var headerRow = raw[headIndex];
+
+        // 2. Tìm cột cuối cùng thực sự có dữ liệu
+        var dataRowsRaw = raw.slice(headIndex + 1);
+        var maxCol = 0;
+        headerRow.forEach(function(h, idx){
+          if(String(h||'').trim().length > 0) maxCol = Math.max(maxCol, idx);
+        });
+        dataRowsRaw.forEach(function(r){
+          for(var c = r.length - 1; c >= 0; c--){
+            if(r[c] != null && String(r[c]).trim().length > 0){
+              if(c > maxCol) maxCol = c;
+              break;
             }
           }
         });
-      });
 
-      if(!raw.length){
-        $('dc').classList.remove('ready');
-        $('tc').textContent = 'File Excel không có dữ liệu';
-        msgCourse('File "'+name+'" trống hoặc không có dòng dữ liệu nào.', false);
-        $('course-res').style.display='none';
-        return;
-      }
-
-      // 1. Xác định dòng Header
-      var headIndex = raw.findIndex(function(r){
-        return r.some(function(v){return /họ\s*tên|họ\s*và\s*tên|mã\s*hv|mã\s*học\s*viên|ngày\s*sinh|cccd|cmnd|stt|số\s*tt/i.test(v)})
-      });
-      if(headIndex === -1) headIndex = 0;
-      var headerRow = raw[headIndex];
-
-      // 2. Tìm cột cuối cùng thực sự có dữ liệu và loại bỏ các cột rỗng thừa
-      var dataRowsRaw = raw.slice(headIndex + 1);
-      var maxCol = 0;
-      headerRow.forEach(function(h, idx){
-        if(String(h||'').trim().length > 0) maxCol = Math.max(maxCol, idx);
-      });
-      dataRowsRaw.forEach(function(r){
-        for(var c = r.length - 1; c >= 0; c--){
-          if(r[c] != null && String(r[c]).trim().length > 0){
-            if(c > maxCol) maxCol = c;
-            break;
+        var validColIndices = [];
+        for(var c = 0; c <= maxCol; c++){
+          var hasHeader = String(headerRow[c]||'').trim().length > 0;
+          var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim().length > 0; });
+          if(hasHeader || hasData){
+            validColIndices.push(c);
           }
         }
-      });
 
-      var validColIndices = [];
-      for(var c = 0; c <= maxCol; c++){
-        var hasHeader = String(headerRow[c]||'').trim().length > 0;
-        var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim().length > 0; });
-        if(hasHeader || hasData){
-          validColIndices.push(c);
+        var fileHeaders = validColIndices.map(function(c, i){
+          var colName = String(headerRow[c]||'').trim();
+          return colName || ('Cột ' + (i+1));
+        });
+
+        var fileDataRows = dataRowsRaw.map(function(r){
+          return validColIndices.map(function(c){ return r[c] != null ? String(r[c]).trim() : ''; });
+        }).filter(function(r){
+          return r.some(function(v){ return v.length > 0; });
+        });
+
+        if(!fileDataRows.length){
+          msgCourse('File "' + name + '" không có dòng học viên nào.', false);
+          resolve(0);
+          return;
         }
+
+        // 3. GỘP DỮ LIỆU VÀO courseStore
+        if(!courseStore.headers.length){
+          // File đầu tiên nạp vào: Thiết lập headers chuẩn
+          courseStore.headers = fileHeaders.slice();
+        }
+
+        // Tìm chỉ số cột STT và các cột khác
+        var sttColIdx = courseStore.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
+
+        // Map cột của file mới vào cấu trúc header hiện tại
+        var colMapping = [];
+        fileHeaders.forEach(function(fh, fIdx){
+          var normFh = norm(fh);
+          var matchedIdx = courseStore.headers.findIndex(function(ch){ return norm(ch) === normFh; });
+          if(matchedIdx === -1 && fIdx < courseStore.headers.length && !/^stt$/i.test(norm(fh))){
+            // Nếu không khớp tên nhưng khớp vị trí (nằm cùng cột tương ứng)
+            matchedIdx = fIdx;
+          }
+          colMapping[fIdx] = matchedIdx;
+        });
+
+        var addedCount = 0;
+        fileDataRows.forEach(function(r){
+          var newRow = new Array(courseStore.headers.length).fill('');
+          r.forEach(function(val, fIdx){
+            var targetIdx = colMapping[fIdx];
+            if(targetIdx !== -1 && targetIdx < courseStore.headers.length){
+              newRow[targetIdx] = val;
+            }
+          });
+
+          // Tự động gán STT liên tục (1, 2, 3...)
+          var currentTotal = courseStore.rows.length + 1;
+          if(sttColIdx !== -1){
+            newRow[sttColIdx] = String(currentTotal);
+          } else if(/^stt$/i.test(norm(courseStore.headers[0]))){
+            newRow[0] = String(currentTotal);
+          }
+
+          courseStore.rows.push(newRow);
+          addedCount++;
+        });
+
+        if(detectedCourse && !courseStore.courses.includes(detectedCourse)){
+          courseStore.courses.push(detectedCourse);
+        }
+        courseStore.files.push({
+          name: name,
+          count: addedCount,
+          course: detectedCourse || ''
+        });
+
+        resolve(addedCount);
+      } catch(e){
+        reject(e);
       }
-
-      var headers = validColIndices.map(function(c, i){
-        var colName = String(headerRow[c]||'').trim();
-        return colName || ('Cột ' + (i+1));
-      });
-
-      var dataRows = dataRowsRaw.map(function(r){
-        return validColIndices.map(function(c){ return r[c] != null ? String(r[c]).trim() : ''; });
-      }).filter(function(r){
-        return r.some(function(v){ return v.length > 0; });
-      });
-
-      if(!dataRows.length){
-        $('dc').classList.remove('ready');
-        $('tc').textContent = 'Không tìm thấy dòng học viên nào';
-        msgCourse('File "'+name+'" chỉ có tiêu đề mà không có dữ liệu học viên.', false);
-        $('course-res').style.display='none';
-        return;
-      }
-
-      courseData.courseName = detectedCourse || 'Khóa học';
-      courseData.headers = headers;
-      courseData.rows = dataRows;
-
-      $('dc').classList.add('ready');
-      $('tc').textContent = name + ' · ' + dataRows.length + ' học viên' + (detectedCourse ? ' · Khóa ' + detectedCourse : '');
-
-      $('c-code').textContent = detectedCourse || '---';
-      $('c-total').textContent = dataRows.length;
-      $('c-cols').textContent = headers.length;
-      $('course-title').textContent = detectedCourse ? ('Khóa ' + detectedCourse) : 'Danh sách thông tin khóa học';
-      $('course-meta').textContent = 'File "' + name + '" gồm ' + dataRows.length + ' học viên · ' + headers.length + ' cột dữ liệu';
-
-      $('course-res').style.display='block';
-      renderCourseTable();
-      msgCourse('Đã tải thành công ' + dataRows.length + ' học viên từ file "' + name + '".', true);
-
-    }catch(e){
-      $('dc').classList.remove('ready');
-      $('tc').textContent = 'Lỗi khi đọc file Excel';
-      msgCourse('Không đọc được cấu trúc file Excel: ' + (e&&e.message||''), false);
-      $('course-res').style.display='none';
-    }
-  }).catch(function(err){
-    $('dc').classList.remove('ready');
-    $('tc').textContent = 'Không đọc được file';
-    msgCourse('Lỗi tải file: ' + (err&&err.message||''), false);
+    }).catch(reject);
   });
 }
 
+function updateCourseStats(){
+  $('c-files-count').textContent = courseStore.files.length;
+  $('c-total').textContent = courseStore.rows.length;
+  $('c-cols').textContent = courseStore.headers.length;
+  
+  var courseDisplay = courseStore.courses.length === 1 ? ('Khóa ' + courseStore.courses[0]) : (courseStore.courses.length > 1 ? (courseStore.courses.length + ' khóa (' + courseStore.courses.join(', ') + ')') : 'Đã gộp');
+  $('c-code').textContent = courseStore.courses.length ? courseStore.courses.join(', ') : '---';
+  $('course-title').textContent = 'Danh sách học viên gộp (' + courseStore.rows.length + ' học viên)';
+  $('course-meta').textContent = 'Đã gộp ' + courseStore.files.length + ' lớp/file · Tổng ' + courseStore.rows.length + ' học viên · ' + courseStore.headers.length + ' cột dữ liệu';
+
+  // Render tags file đã gộp
+  var tagsContainer = $('course-files-list');
+  if(tagsContainer){
+    tagsContainer.innerHTML = courseStore.files.map(function(f){
+      return '<span class="file-tag">📄 ' + esc(f.name) + ' <b>(+' + f.count + ' HV' + (f.course ? ' · ' + f.course : '') + ')</b></span>';
+    }).join('');
+  }
+}
+
 function renderCourseTable(){
-  var headers = courseData.headers;
-  var rows = courseData.rows;
+  var headers = courseStore.headers;
+  var rows = courseStore.rows;
   var q = norm(courseSearchTerm.trim());
 
   var filtered = rows.filter(function(r){
@@ -608,17 +744,19 @@ function renderCourseTable(){
   if(!filtered.length){
     $('course-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length, 1) + '" class="empty-table">Không tìm thấy thông tin phù hợp với từ khóa "' + esc(courseSearchTerm) + '".</td></tr>';
   } else {
-    var tbodyHtml = filtered.map(function(r){
+    var tbodyHtml = filtered.map(function(r, rowIndex){
       return '<tr>' + headers.map(function(h, idx){
         var val = r[idx] != null ? String(r[idx]).trim() : '';
         var isNumeric = /^\d+$/.test(val) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val);
-        return '<td' + (isNumeric ? ' class="num"' : '') + ' title="' + esc(val) + '">' + esc(val) + '</td>';
+        var isStt = idx === 0 || /^stt$/i.test(norm(h));
+        var displayVal = isStt ? (rowIndex + 1) : val;
+        return '<td' + (isNumeric ? ' class="num"' : '') + ' title="' + esc(displayVal) + '">' + esc(displayVal) + '</td>';
       }).join('') + '</tr>';
     }).join('');
     $('course-tb').innerHTML = tbodyHtml;
   }
 
-  $('course-meta').textContent = 'Tổng ' + rows.length + ' học viên' + (courseSearchTerm ? (' · Đang hiển thị ' + filtered.length + ' kết quả phù hợp') : '');
+  $('course-meta').textContent = 'Tổng ' + rows.length + ' học viên từ ' + courseStore.files.length + ' lớp' + (courseSearchTerm ? (' · Đang hiển thị ' + filtered.length + ' kết quả phù hợp') : '');
 }
 
 var courseSearchInput = $('course-search');
@@ -639,37 +777,43 @@ if(courseClearBtn){
   });
 }
 
-/* Xuất Excel danh sách khóa học */
+/* Xuất Excel danh sách khóa học gộp */
 $('course-exp').addEventListener('click', async function(){
-  if(!courseData.rows.length){return;}
+  if(!courseStore.rows.length){return;}
   if(typeof ExcelJS === 'undefined'){msgCourse('Không có thư viện ExcelJS để xuất file.', false); return;}
   
   try{
     var q = norm(courseSearchTerm.trim());
-    var exportRows = courseData.rows.filter(function(r){
+    var exportRows = courseStore.rows.filter(function(r){
       if(!q) return true;
       return r.some(function(cell){return norm(String(cell||'')).indexOf(q) !== -1;});
     });
 
     var wb = new ExcelJS.Workbook();
-    var ws = wb.addWorksheet('Danh sách học viên');
+    var ws = wb.addWorksheet('Danh sách học viên gộp');
     
     // Header
-    var headerRow = ws.addRow(courseData.headers);
+    var headerRow = ws.addRow(courseStore.headers);
     headerRow.eachCell(function(cell){
       cell.font = {bold: true, color: {argb: 'FFFFFFFF'}};
       cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF22303C'}};
       cell.alignment = {vertical: 'middle', horizontal: 'center'};
     });
     
-    // Rows
-    exportRows.forEach(function(r){
-      ws.addRow(courseData.headers.map(function(h, idx){return r[idx] || '';}));
+    // Rows (Đánh lại STT chuẩn 1..N)
+    exportRows.forEach(function(r, rIdx){
+      var rowValues = courseStore.headers.map(function(h, idx){
+        if(idx === 0 || /^stt$/i.test(norm(h))){
+          return rIdx + 1;
+        }
+        return r[idx] || '';
+      });
+      ws.addRow(rowValues);
     });
 
     // Auto column widths
     ws.columns.forEach(function(col, i){
-      var maxLen = String(courseData.headers[i]||'').length + 4;
+      var maxLen = String(courseStore.headers[i]||'').length + 4;
       exportRows.slice(0, 50).forEach(function(r){
         var cellLen = String(r[i]||'').length;
         if(cellLen > maxLen) maxLen = Math.min(cellLen + 3, 40);
@@ -677,9 +821,10 @@ $('course-exp').addEventListener('click', async function(){
       col.width = Math.max(maxLen, 12);
     });
 
-    var expName = 'ThongTinKhoaHoc_' + (courseData.courseName ? courseData.courseName.replace(/[^a-zA-Z0-9_-]/g,'_') : 'KimThanh') + '.xlsx';
+    var courseSuffix = courseStore.courses.length ? courseStore.courses.join('_') : 'GopCacLop';
+    var expName = 'DanhSachHocVienGop_' + courseSuffix.replace(/[^a-zA-Z0-9_-]/g,'_') + '.xlsx';
     await saveFile(new Blob([await wb.xlsx.writeBuffer()],{type:'application/octet-stream'}), expName);
-    msgCourse('Đã xuất thành công file "' + expName + '" (' + exportRows.length + ' học viên).', true);
+    msgCourse('Đã xuất thành công file "' + expName + '" gồm ' + exportRows.length + ' học viên từ ' + courseStore.files.length + ' lớp.', true);
   }catch(e){
     if(!e || e.code !== 'declined') msgCourse('Không xuất được file Excel: ' + (e&&e.message||''), false);
   }
