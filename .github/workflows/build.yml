@@ -32,22 +32,22 @@ jobs:
       - name: Compress Build Output into ZIP
         shell: pwsh
         run: |
-          Compress-Archive -Path dist/BaoCaoHetKhoa-win32-x64/* -DestinationPath dist/BaoCaoHetKhoa_v1.0.0_win64.zip
+          Compress-Archive -Path dist/PhanMemBaoCao-win32-x64/* -DestinationPath dist/PhanMemBaoCao_v1.0.0_win64.zip
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BaoCaoHetKhoa-Windows-App
-          path: dist/BaoCaoHetKhoa_v1.0.0_win64.zip
+          name: PhanMemBaoCao-Windows-App
+          path: dist/PhanMemBaoCao_v1.0.0_win64.zip
 
       - name: Create / Update GitHub Release
         uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
         with:
           tag_name: v1.0.0
-          name: Release v1.0.0 - Báo cáo hết khóa & Thông tin khóa học
+          name: Release v1.0.0 - Phần mềm báo cáo
           body: |
-            ## 🎉 Bản phát hành ứng dụng Báo cáo hết khóa & Thông tin khóa học
+            ## 🎉 Bản phát hành ứng dụng Phần mềm báo cáo
             **Trung tâm GDNN&SHLX Kim Thành**
 
             ### 🚀 Chức năng chính:
@@ -55,9 +55,9 @@ jobs:
             2. **Thông tin khóa học:** Tra cứu thông tin học viên theo khóa, tìm kiếm nhanh và xuất danh sách Excel.
 
             ### 📥 Hướng dẫn tải và sử dụng:
-            1. Tải file **`BaoCaoHetKhoa_v1.0.0_win64.zip`** ở phần Assets bên dưới về máy tính.
-            2. Giải nén file `.zip` ra một thư mục (ví dụ `D:\BaoCaoHetKhoa`).
-            3. Bấm đúp file **`BaoCaoHetKhoa.exe`** để mở và sử dụng ngay (không cần cài đặt, không cần mạng).
-          files: dist/BaoCaoHetKhoa_v1.0.0_win64.zip
+            1. Tải file **`PhanMemBaoCao_v1.0.0_win64.zip`** ở phần Assets bên dưới về máy tính.
+            2. Giải nén file `.zip` ra một thư mục (ví dụ `D:\PhanMemBaoCao`).
+            3. Bấm đúp file **`PhanMemBaoCao.exe`** để mở và sử dụng ngay (không cần cài đặt, không cần mạng).
+          files: dist/PhanMemBaoCao_v1.0.0_win64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

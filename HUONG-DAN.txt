@@ -1,14 +1,14 @@
-BÁO CÁO HẾT KHÓA
+PHẦN MỀM BÁO CÁO
 Trung tâm GDNN&SHLX Kim Thành
 
 CÁCH DÙNG
-1. Giải nén toàn bộ file .zip ra một thư mục (ví dụ D:\BaoCaoHetKhoa). Không chạy trực tiếp trong file zip.
-2. Bấm đúp BaoCaoHetKhoa.exe để mở. Không cần cài đặt, không cần mạng.
+1. Giải nén toàn bộ file .zip ra một thư mục (ví dụ D:\PhanMemBaoCao). Không chạy trực tiếp trong file zip.
+2. Bấm đúp PhanMemBaoCao.exe để mở. Không cần cài đặt, không cần mạng.
 3. Ứng dụng gồm 2 chức năng chính:
    - Chức năng 1 (Báo cáo): Tải báo cáo Viettel và Ecotek lên để gộp dữ liệu cabin, lọc, tìm kiếm và xuất Excel theo mẫu.
    - Chức năng 2 (Thông tin khóa học): Tải file Excel khóa học lên để tra cứu thông tin học viên, tìm kiếm và xuất danh sách Excel.
 
 LƯU Ý
-- Không tách riêng file .exe ra khỏi thư mục, vì exe cần các file đi kèm. Muốn mở nhanh thì chuột phải vào BaoCaoHetKhoa.exe, chọn "Gửi tới > Desktop (tạo lối tắt)".
+- Không tách riêng file .exe ra khỏi thư mục, vì exe cần các file đi kèm. Muốn mở nhanh thì chuột phải vào PhanMemBaoCao.exe, chọn "Gửi tới > Desktop (tạo lối tắt)".
 - Nếu Windows báo "Windows protected your PC" (SmartScreen) thì bấm "More info" rồi "Run anyway". Ứng dụng chưa có chữ ký số nên Windows hiện cảnh báo này.
 - Yêu cầu Windows 10 hoặc 11, 64-bit.

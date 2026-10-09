@@ -1,4 +1,4 @@
-# Báo cáo hết khóa & Thông tin khóa học
+# Phần mềm báo cáo
 **Trung tâm GDNN & SHLX Kim Thành**
 
 Phần mềm hỗ trợ xử lý dữ liệu báo cáo cabin và tra cứu thông tin khóa học lái xe.
@@ -25,8 +25,8 @@ Phần mềm hỗ trợ xử lý dữ liệu báo cáo cabin và tra cứu thôn
 ## 📥 Tải bản cài đặt sẵn (.exe)
 
 Bạn có thể tải trực tiếp bản chạy `.exe` sẵn có tại mục [**Releases**](https://github.com/Duchoa01a/PM_baocao/releases):
-1. Tải file `BaoCaoHetKhoa_v1.0.0_win64.zip`.
-2. Giải nén ra thư mục và mở file `BaoCaoHetKhoa.exe` để sử dụng (không cần cài đặt).
+1. Tải file `PhanMemBaoCao_v1.0.0_win64.zip`.
+2. Giải nén ra thư mục và mở file `PhanMemBaoCao.exe` để sử dụng (không cần cài đặt).
 
 ---
 

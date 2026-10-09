@@ -5,7 +5,7 @@ if(!app.requestSingleInstanceLock()){app.quit()}
 let win;
 function create(){
   Menu.setApplicationMenu(null);
-  win=new BrowserWindow({width:1100,height:820,minWidth:640,minHeight:600,title:'Báo cáo hết khóa',
+  win=new BrowserWindow({width:1100,height:820,minWidth:640,minHeight:600,title:'Phần mềm báo cáo',
     icon:path.join(__dirname,'icon.ico'),backgroundColor:'#FAF8F2',autoHideMenuBar:true,
     webPreferences:{contextIsolation:true,nodeIntegration:false,sandbox:true}});
   win.loadFile(path.join(__dirname,'index.html'));
