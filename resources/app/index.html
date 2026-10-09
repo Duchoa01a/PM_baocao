@@ -46,10 +46,10 @@ body{background:var(--paper);color:var(--ink);font-family:'Segoe UI',-apple-syst
 /* Header */
 .top{background:linear-gradient(135deg,#107C41 0%,#0B5A2F 100%);padding:20px 20px 52px;position:relative;color:#fff}
 .top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.25)}
-.in{max-width:1300px;margin:0 auto}
+.in{max-width:1320px;margin:0 auto}
 .org{color:#A7F3D0;font-size:12.5px;font-weight:700;margin:0 0 4px;letter-spacing:0.8px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
 h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-items:center;gap:10px}
-.sub{color:#E2E8F0;font-size:13.5px;line-height:1.5;margin:0 0 16px;max-width:85ch;opacity:.95}
+.sub{color:#E2E8F0;font-size:13.5px;line-height:1.5;margin:0 0 16px;max-width:90ch;opacity:.95}
 
 /* Tab Switcher (Excel Ribbon / Sheet Tabs style) */
 .nav-tabs{display:inline-flex;background:rgba(0,0,0,.25);padding:4px;border-radius:10px;gap:4px;border:1px solid rgba(255,255,255,.2);flex-wrap:wrap}
@@ -60,7 +60,7 @@ h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-i
 .nav-tab.active .badge{background:#107C41;color:#fff}
 
 /* Main Container */
-.wrap{max-width:1300px;margin:-32px auto 40px;padding:0 20px;position:relative}
+.wrap{max-width:1320px;margin:-32px auto 40px;padding:0 20px;position:relative}
 .tab-content{display:none}
 .tab-content.active{display:block;animation:fadeIn .18s ease-out}
 @keyframes fadeIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}
@@ -68,7 +68,7 @@ h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-i
 /* Card & Drops */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 25px -10px rgba(15,23,42,.2);overflow:hidden}
 .drops{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px}
-.drop{display:block;position:relative;border:2px dashed var(--line);border-radius:9px;padding:20px 16px;cursor:pointer;background:var(--paper);transition:border-color .15s, background .15s}
+.drop{display:block;position:relative;border:2px dashed var(--line);border-radius:9px;padding:18px 16px;cursor:pointer;background:var(--paper);transition:border-color .15s, background .15s}
 .drop:hover,.drop.over,.drop:focus-within{border-color:var(--excel-green);background:rgba(16,124,65,.04)}
 .drop.ready{border-style:solid;border-color:var(--good);background:rgba(21,128,61,.04)}
 .drop input{position:absolute;opacity:0;width:1px;height:1px}
@@ -76,17 +76,42 @@ h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-i
 .drop.v b{color:var(--blue)}.drop.e b{color:var(--eco)}.drop.c b{color:var(--teal)}.drop.s b{color:var(--excel-green)}
 .drop span{font-size:12.5px;color:var(--muted);line-height:1.45;word-break:break-all}
 
-/* Single Drop */
-.drop-single{padding:16px}
-.drop.single{padding:22px 18px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
-.drop.single .icon{font-size:30px;margin-bottom:6px;opacity:.9}
+/* Single Drop / Action Banner */
+.summary-action-banner{
+  padding:14px 16px;
+  background:#F8FAFC;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.summary-drop-compact{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  border:2px dashed var(--excel-green);
+  background:#FFFFFF;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:all .15s;
+}
+.summary-drop-compact:hover{
+  background:#F0FDF4;
+  border-color:#0B5A2F;
+}
+.summary-drop-compact input{position:absolute;opacity:0;width:1px;height:1px}
+.summary-drop-compact b{color:#107C41;font-size:13.5px}
+.summary-drop-compact span{color:var(--muted);font-size:12px}
 
 /* Messages */
-.msg{margin:0 16px 16px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.55;display:none}
+.msg{margin:12px 16px;padding:10px 14px;border-radius:8px;font-size:13px;line-height:1.55;display:none}
 .msg.show{display:block}
 .msg.ok{background:rgba(21,128,61,.1);color:var(--good);border:1px solid rgba(21,128,61,.3)}
 .msg.err{background:rgba(220,38,38,.1);color:var(--warn);border:1px solid rgba(220,38,38,.3)}
-.rule{padding:12px 16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--soft);line-height:1.6;background:var(--paper)}
+.rule{padding:10px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--soft);line-height:1.6;background:var(--paper)}
 
 /* Result Card & Action bar */
 .res-card{margin-top:18px}
@@ -106,7 +131,7 @@ h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-i
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
 .stats.cols-3{grid-template-columns:repeat(3,1fr)}
 .st{background:var(--panel);padding:10px 14px}
-.st p{margin:0 0 3px;font-size:11.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
+.st p{margin:0 0 3px;font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.4px}
 .st div{font-size:22px;font-weight:700;line-height:1.1}
 .st.v div{color:var(--blue)}.st.e div{color:var(--eco)}.st.n div{color:var(--warn)}.st.t div{color:var(--excel-green)}.st.c div{color:var(--teal)}.st.o div{color:var(--orange)}
 
@@ -188,7 +213,7 @@ h1{color:#fff;font-size:24px;margin:0 0 6px;font-weight:700;display:flex;align-i
   border-radius:4px;
   padding:3px 8px;
   font-size:12px;
-  width:180px;
+  width:200px;
 }
 .excel-search-quick input:focus{
   outline:1px solid #107C41;
@@ -272,6 +297,19 @@ table.excel-grid tr.excel-field-headers th.row-idx-corner{
   min-width:45px;
 }
 
+/* Highlight specific column: Cột Khóa / Lớp */
+table.excel-grid th.col-class-head{
+  background:#ECFDF5 !important;
+  color:#047857 !important;
+  border-color:#A7F3D0 !important;
+}
+table.excel-grid td.col-class-cell{
+  background:#F0FDF4;
+  font-weight:600;
+  color:#047857;
+  text-align:center;
+}
+
 /* Data Cells */
 table.excel-grid td{
   padding:5px 10px;
@@ -302,7 +340,7 @@ table.excel-grid td.row-num-cell{
 }
 
 /* Zebra Striping & Hover */
-table.excel-grid tbody tr:nth-child(even) td:not(.row-num-cell){background:#FAFAFA}
+table.excel-grid tbody tr:nth-child(even) td:not(.row-num-cell):not(.col-class-cell){background:#FAFAFA}
 table.excel-grid tbody tr:hover td:not(.row-num-cell){background:#F0FDF4}
 table.excel-grid tr.chg td:not(.row-num-cell){background:#F5F3FF}
 
@@ -310,7 +348,7 @@ table.excel-grid tr.chg td:not(.row-num-cell){background:#F5F3FF}
 table.excel-grid td.cell-active{
   outline:2px solid #107C41 !important;
   outline-offset:-2px;
-  background:#ECFDF5 !important;
+  background:#DCFCE7 !important;
   position:relative;
   z-index:1;
 }
@@ -374,7 +412,7 @@ table.excel-grid td.cell-active{
 .tag.n{color:var(--warn);border-color:var(--warn);background:rgba(220,38,38,.06)}
 .old{color:var(--muted);text-decoration:line-through;font-size:11px;margin-right:5px}
 .warn{padding:10px 16px;font-size:12.5px;line-height:1.6;color:var(--warn);border-top:1px solid var(--line)}
-.empty-table{padding:32px 16px;text-align:center;color:var(--muted);font-size:13px}
+.empty-table{padding:36px 16px;text-align:center;color:var(--muted);font-size:13px;line-height:1.7}
 
 @media(max-width:640px){
   .drops{grid-template-columns:1fr}
@@ -401,10 +439,10 @@ table.excel-grid td.cell-active{
     <h1 id="top-title">
       <span>📊 Phần mềm báo cáo</span>
     </h1>
-    <p class="sub" id="top-desc">Hệ thống xử lý bảng tính Excel: gộp báo cáo cabin Viettel &amp; Ecotek, tra cứu thông tin khóa học và tự động gộp học viên các lớp.</p>
+    <p class="sub" id="top-desc">Hệ thống xử lý bảng tính Excel chuyên nghiệp: gộp báo cáo cabin Viettel &amp; Ecotek, tra cứu khóa học và tự động tích lũy dữ liệu vào file Excel tổng hợp.</p>
     
     <div class="nav-tabs" role="tablist">
-      <button type="button" class="nav-tab active" id="tab-btn-report" onclick="setTab('report')">
+      <button type="button" class="nav-tab" id="tab-btn-report" onclick="setTab('report')">
         <span>📊 1. Báo cáo</span>
         <span class="badge" id="report-badge">Gộp Cabin</span>
       </button>
@@ -412,9 +450,9 @@ table.excel-grid td.cell-active{
         <span>🎓 2. Thông tin khóa học</span>
         <span class="badge" id="course-badge">Tra cứu file</span>
       </button>
-      <button type="button" class="nav-tab" id="tab-btn-summary" onclick="setTab('summary')">
+      <button type="button" class="nav-tab active" id="tab-btn-summary" onclick="setTab('summary')">
         <span>📑 3. Báo cáo tổng</span>
-        <span class="badge" id="summary-badge">Gộp nhiều lớp</span>
+        <span class="badge" id="summary-badge">File Excel tổng</span>
       </button>
     </div>
   </div>
@@ -422,7 +460,7 @@ table.excel-grid td.cell-active{
 
 <div class="wrap">
   <!-- TAB 1: BÁO CÁO HẾT KHÓA -->
-  <div class="tab-content active" id="view-report">
+  <div class="tab-content" id="view-report">
     <div class="card">
       <div class="drops">
         <label class="drop v" id="dv">
@@ -504,7 +542,7 @@ table.excel-grid td.cell-active{
           <input type="file" id="fc" accept=".xlsx,.xls,.csv">
           <div class="icon">📗</div>
           <b>Tải file thông tin khóa học Excel</b>
-          <span id="tc">Bấm vào đây hoặc kéo thả file Excel (.xlsx, .xls, .csv) để xem giao diện chuẩn bảng tính</span>
+          <span id="tc">Bấm vào đây hoặc kéo thả file Excel (.xlsx, .xls, .csv) để tra cứu dữ liệu</span>
         </label>
       </div>
       <div class="msg" id="msg-course" role="status"></div>
@@ -562,41 +600,37 @@ table.excel-grid td.cell-active{
     </div>
   </div>
 
-  <!-- TAB 3: BÁO CÁO TỔNG (TỰ ĐỘNG GỘP NHIỀU LỚP/FILE) -->
-  <div class="tab-content" id="view-summary">
+  <!-- TAB 3: BÁO CÁO TỔNG (CÓ SẴN FILE EXCEL TỔNG VÀ CỘT KHÓA / LỚP) -->
+  <div class="tab-content active" id="view-summary">
     <div class="card">
-      <div class="drop-single">
-        <label class="drop single s" id="ds">
-          <input type="file" id="fs" accept=".xlsx,.xls,.csv" multiple>
-          <div class="icon">📑</div>
-          <b>Tải hoặc thêm file Excel các lớp để gộp</b>
-          <span id="ts">Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động thêm học viên vào báo cáo tổng</span>
-        </label>
-      </div>
-      <div class="msg" id="msg-summary" role="status"></div>
-      <div class="rule">
-        <b>Nguyên tắc Báo cáo tổng:</b> Tự động tổng hợp dữ liệu học viên từ nhiều lớp vào 1 file Excel duy nhất. Nếu thêm lại file lớp đã có, phần mềm <b>chỉ cập nhật thông tin</b> học viên và không bị nhân đôi/trùng lặp dòng.
-      </div>
-    </div>
+      <!-- Action Banner & Excel Drop Area -->
+      <div class="summary-action-banner">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <label class="summary-drop-compact" id="ds" title="Kéo thả hoặc bấm để nạp thêm file lớp">
+            <input type="file" id="fs" accept=".xlsx,.xls,.csv" multiple>
+            <span style="font-size:20px">📥</span>
+            <div>
+              <b>➕ Thêm file lớp vào File Excel tổng</b>
+              <div id="ts" style="font-size:11.5px;color:var(--muted)">Bấm hoặc kéo thả 1 hay nhiều file Excel lớp vào đây</div>
+            </div>
+          </label>
+        </div>
 
-    <div class="card res-card" id="summary-res" style="display:none">
-      <div class="head">
-        <div>
-          <h2 id="summary-title">Báo cáo tổng hợp</h2>
-          <p id="summary-meta">Đã gộp dữ liệu các lớp</p>
-        </div>
         <div class="head-actions">
-          <button class="btn btn-secondary" id="summary-add-more" type="button">➕ Thêm lớp / file khác</button>
-          <button class="btn btn-danger" id="summary-reset" type="button">🗑️ Xóa làm mới</button>
-          <button class="btn btn-excel" id="summary-exp" type="button">⬇ Xuất Excel Báo cáo tổng</button>
+          <button class="btn btn-secondary" id="summary-add-more" type="button">➕ Thêm file lớp</button>
+          <button class="btn btn-danger" id="summary-reset" type="button" title="Xóa toàn bộ để làm mới">🗑️ Làm mới bảng</button>
+          <button class="btn btn-excel" id="summary-exp" type="button">⬇ Xuất file Excel tổng (.xlsx)</button>
         </div>
       </div>
-      
+
+      <div class="msg" id="msg-summary" role="status"></div>
+
+      <!-- Stats Bar -->
       <div class="stats">
-        <div class="st o"><p>Số file / lớp đã gộp</p><div class="num" id="s-files-count">0</div></div>
         <div class="st t"><p>Tổng số học viên</p><div class="num" id="s-total">0</div></div>
-        <div class="st v"><p>Khóa học</p><div id="s-code" style="font-size:18px;font-weight:700">---</div></div>
-        <div class="st e"><p>Số cột thông tin</p><div class="num" id="s-cols">0</div></div>
+        <div class="st o"><p>Số file / lớp đã gộp</p><div class="num" id="s-files-count">0</div></div>
+        <div class="st v"><p>Khóa học hiện có</p><div id="s-code" style="font-size:17px;font-weight:700">---</div></div>
+        <div class="st e"><p>Tổng số cột</p><div class="num" id="s-cols">0</div></div>
       </div>
 
       <div class="file-tags" id="summary-files-list"></div>
@@ -610,22 +644,25 @@ table.excel-grid td.cell-active{
         </div>
         <div class="excel-search-quick">
           <span>🔍</span>
-          <input id="summary-search" type="search" placeholder="Tìm kiếm trong báo cáo tổng..." aria-label="Tìm báo cáo tổng">
+          <input id="summary-search" type="search" placeholder="Tìm kiếm nhanh (Tên, Khóa/Lớp, CCCD, Mã HV...)..." aria-label="Tìm báo cáo tổng">
           <button class="btn btn-secondary" style="padding:3px 8px;font-size:11.5px" id="summary-clear-search" type="button">Xóa</button>
         </div>
       </div>
 
+      <!-- Excel Master Spreadsheet Table -->
       <div class="tw">
         <table id="table-summary" class="excel-grid">
           <thead id="summary-th"></thead>
           <tbody id="summary-tb"></tbody>
         </table>
       </div>
+
+      <!-- Excel Bottom Sheet Bar -->
       <div class="excel-footer-bar">
         <div class="excel-sheet-tabs-wrap">
           <button type="button" class="sheet-tab-nav" title="Đầu">|◀</button>
           <button type="button" class="sheet-tab-nav" title="Trước">◀</button>
-          <span class="sheet-tab-btn">📋 BaoCaoTongHop</span>
+          <span class="sheet-tab-btn">📋 FileExcelTongHop</span>
           <button type="button" class="sheet-tab-nav" title="Sau">▶</button>
           <button type="button" class="sheet-tab-nav" title="Cuối">▶|</button>
         </div>
@@ -634,6 +671,10 @@ table.excel-grid td.cell-active{
           <span class="excel-status-item" id="summary-sheet-status">0 dòng dữ liệu</span>
           <span class="excel-status-item">Zoom 100%</span>
         </div>
+      </div>
+
+      <div class="rule">
+        <b>💡 Tự động cập nhật:</b> Khi bạn nạp thêm các file Excel lớp (ví dụ K01, K02B2...), dữ liệu học viên sẽ tự động tích lũy vào file tổng này và được gán chính xác cột <b>Khóa / Lớp</b>. Nếu nạp lại file lớp đã có, hệ thống sẽ chỉ cập nhật thông tin học viên mà không nhân đôi dòng.
       </div>
     </div>
   </div>
@@ -804,7 +845,6 @@ function renderMergeList(){
   
   var reportCols = ['STT', 'Họ và tên', 'Mã học viên', 'Ngày sinh', 'Thời gian', 'Số nội dung', 'Kết quả', 'Cabin'];
   
-  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Headers
   var theadHtml = '<tr class="excel-col-letters"><th class="corner-cell">◿</th>' + reportCols.map(function(h, idx){
     return '<th title="Cột ' + toColLetter(idx) + '">' + toColLetter(idx) + '</th>';
   }).join('') + '</tr>';
@@ -963,7 +1003,7 @@ function loadCourseFile(file){
       var validColIndices = [];
       for(var c = 0; c <= maxCol; c++){
         var hasHeader = String(headerRow[c]||'').trim().length > 0;
-        var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim().length > 0; });
+        var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim() : ''; });
         if(hasHeader || hasData){
           validColIndices.push(c);
         }
@@ -1031,7 +1071,6 @@ function renderCourseTable(){
     });
   });
 
-  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Headers
   var theadHtml = '<tr class="excel-col-letters"><th class="corner-cell">◿</th>' + headers.map(function(h, idx){
     return '<th title="Cột ' + toColLetter(idx) + '">' + toColLetter(idx) + '</th>';
   }).join('') + '</tr>';
@@ -1105,7 +1144,6 @@ $('course-exp').addEventListener('click', async function(){
     var wb = new ExcelJS.Workbook();
     var ws = wb.addWorksheet('Danh sách học viên');
     
-    // Header
     var headerRow = ws.addRow(courseData.headers);
     headerRow.eachCell(function(cell){
       cell.font = {bold: true, color: {argb: 'FFFFFFFF'}, size: 11};
@@ -1113,7 +1151,6 @@ $('course-exp').addEventListener('click', async function(){
       cell.alignment = {vertical: 'middle', horizontal: 'center'};
     });
     
-    // Rows
     exportRows.forEach(function(r, rIdx){
       var rowValues = courseData.headers.map(function(h, idx){
         if(idx === 0 || /^stt$/i.test(norm(h))){
@@ -1132,7 +1169,6 @@ $('course-exp').addEventListener('click', async function(){
       });
     });
 
-    // Auto column widths
     ws.columns.forEach(function(col, i){
       var maxLen = String(courseData.headers[i]||'').length + 4;
       exportRows.slice(0, 50).forEach(function(r){
@@ -1151,15 +1187,53 @@ $('course-exp').addEventListener('click', async function(){
 });
 
 /* =========================================================
-   TAB 3: BÁO CÁO TỔNG (TỰ ĐỘNG GỘP NHIỀU LỚP/FILE)
+   TAB 3: BÁO CÁO TỔNG (CÓ SẴN FILE EXCEL TỔNG VÀ CỘT KHÓA / LỚP)
    ========================================================= */
-var summaryStore = {
-  files: [],
-  headers: [],
-  rows: [],
-  courses: [],
-  studentKeyMap: {}
-};
+
+// Cấu trúc cột mặc định chuẩn của File Excel tổng trong phần mềm
+var DEFAULT_SUMMARY_HEADERS = [
+  'STT',
+  'Khóa / Lớp',
+  'Mã học viên',
+  'Họ và tên',
+  'Ngày sinh',
+  'Giới tính',
+  'Số CCCD/CMND',
+  'Hạng GPLX',
+  'Số điện thoại',
+  'Địa chỉ',
+  'Thời gian',
+  'Kết quả'
+];
+
+var STORAGE_KEY = 'PM_BAOCAO_SUMMARY_STORAGE_V2';
+
+function loadPersistedSummaryStore(){
+  try{
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      var parsed = JSON.parse(raw);
+      if(parsed && Array.isArray(parsed.rows)){
+        return parsed;
+      }
+    }
+  }catch(e){}
+  return {
+    files: [],
+    headers: DEFAULT_SUMMARY_HEADERS.slice(),
+    rows: [],
+    courses: [],
+    studentKeyMap: {}
+  };
+}
+
+function saveSummaryStore(){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(summaryStore));
+  }catch(e){}
+}
+
+var summaryStore = loadPersistedSummaryStore();
 var summarySearchTerm = '';
 
 function msgSummary(t,ok){var m=$('msg-summary');m.textContent=t;m.className='msg show '+(ok?'ok':'err')}
@@ -1190,12 +1264,19 @@ function bindSummaryDrop(){
   var resetBtn = $('summary-reset');
   if(resetBtn){
     resetBtn.addEventListener('click', function(){
-      if(summaryStore.rows.length && !confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu báo cáo tổng để làm mới?')) return;
-      summaryStore = { files: [], headers: [], rows: [], courses: [], studentKeyMap: {} };
-      $('summary-res').style.display = 'none';
-      $('ds').classList.remove('ready');
-      $('ts').textContent = 'Bấm vào đây hoặc kéo thả một hay nhiều file Excel (.xlsx, .xls, .csv) để tự động thêm học viên vào báo cáo tổng';
-      msgSummary('Đã làm mới báo cáo tổng.', true);
+      if(summaryStore.rows.length && !confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu file Excel tổng để làm mới?')) return;
+      summaryStore = {
+        files: [],
+        headers: DEFAULT_SUMMARY_HEADERS.slice(),
+        rows: [],
+        courses: [],
+        studentKeyMap: {}
+      };
+      saveSummaryStore();
+      updateSummaryStats();
+      renderSummaryTable();
+      $('ts').textContent = 'Bấm hoặc kéo thả 1 hay nhiều file Excel lớp vào đây để tự động nạp';
+      msgSummary('Đã làm mới bảng tính Excel tổng.', true);
     });
   }
 }
@@ -1240,7 +1321,7 @@ async function loadSummaryFiles(files){
     return;
   }
 
-  $('ts').textContent = 'Đang xử lý ' + excelFiles.length + ' file Excel...';
+  $('ts').textContent = 'Đang tự động cập nhật từ ' + excelFiles.length + ' file Excel...';
   
   var totalAdded = 0;
   var totalUpdated = 0;
@@ -1257,21 +1338,18 @@ async function loadSummaryFiles(files){
     }
   }
 
-  if(summaryStore.rows.length > 0){
-    $('ds').classList.add('ready');
-    $('ts').textContent = 'Đã tổng hợp ' + summaryStore.files.length + ' file · ' + summaryStore.rows.length + ' học viên';
-    $('summary-res').style.display = 'block';
-    
-    updateSummaryStats();
-    renderSummaryTable();
+  saveSummaryStore();
+  updateSummaryStats();
+  renderSummaryTable();
 
-    var msgText = 'Đã xử lý xong: Thêm mới ' + totalAdded + ' học viên';
-    if(totalUpdated > 0){
-      msgText += ', cập nhật lại thông tin ' + totalUpdated + ' học viên đã có';
-    }
-    msgText += '. Tổng cộng hiện có ' + summaryStore.rows.length + ' học viên trong báo cáo tổng.';
-    msgSummary(msgText, true);
+  $('ts').textContent = 'Đã tổng hợp ' + summaryStore.files.length + ' file · ' + summaryStore.rows.length + ' học viên';
+  
+  var msgText = 'Đã cập nhật xong file Excel tổng: Thêm mới ' + totalAdded + ' học viên';
+  if(totalUpdated > 0){
+    msgText += ', cập nhật thông tin ' + totalUpdated + ' học viên đã có';
   }
+  msgText += '. Hiện có ' + summaryStore.rows.length + ' học viên trong file tổng.';
+  msgSummary(msgText, true);
 }
 
 function parseCourseFileSummary(file){
@@ -1282,6 +1360,15 @@ function parseCourseFileSummary(file){
         var wb = XLSX.read(new Uint8Array(buf),{type:'array',cellDates:false});
         var raw = [];
         var detectedCourse = (name.match(CRS)||[''])[0];
+        
+        // Trích xuất mã khóa từ tên file nếu có dạng K01, K02, K34B2...
+        if(!detectedCourse){
+          var baseNameMatch = name.match(/[Kk]\s*(\d+[A-Za-z0-9\/-]*)/);
+          if(baseNameMatch) detectedCourse = baseNameMatch[0].toUpperCase();
+          else if(/lớp\s*([A-Za-z0-9\/-]+)/i.test(name)){
+            detectedCourse = name.match(/lớp\s*([A-Za-z0-9\/-]+)/i)[0];
+          }
+        }
         
         wb.SheetNames.forEach(function(sheetName){
           var sheet = wb.Sheets[sheetName];
@@ -1295,7 +1382,7 @@ function parseCourseFileSummary(file){
                 row.forEach(function(cell){
                   var m = cell.match(CRS);
                   if(m) detectedCourse = m[0];
-                  else if(/khóa|khoá/i.test(cell) && cell.length < 40){
+                  else if(/khóa|khoá|lớp/i.test(cell) && cell.length < 40){
                     var cm = cell.match(/[Kk]\s*(\d+[A-Za-z0-9\/-]*)/);
                     if(cm) detectedCourse = cm[0].toUpperCase();
                   }
@@ -1356,28 +1443,74 @@ function parseCourseFileSummary(file){
           return;
         }
 
-        if(!summaryStore.headers.length){
-          summaryStore.headers = fileHeaders.slice();
+        // Đảm bảo cấu trúc file tổng LUÔN CÓ CỘT "Khóa / Lớp"
+        if(!summaryStore.headers || !summaryStore.headers.length){
+          summaryStore.headers = DEFAULT_SUMMARY_HEADERS.slice();
+        } else {
+          var hasClassCol = summaryStore.headers.some(function(h){ return /khóa|khoá|lớp/i.test(norm(h)); });
+          if(!hasClassCol){
+            summaryStore.headers.splice(1, 0, 'Khóa / Lớp');
+            summaryStore.rows.forEach(function(row){
+              row.splice(1, 0, '');
+            });
+          }
         }
 
-        var sttColIdx = summaryStore.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
-        if(sttColIdx === -1 && /^stt$/i.test(norm(summaryStore.headers[0]))) sttColIdx = 0;
+        // Tự động mở rộng thêm các cột mới từ file nạp vào nếu chưa có
+        fileHeaders.forEach(function(fh){
+          var normFh = norm(fh);
+          if(/stt|số\s*tt|khóa|khoá|lớp/i.test(normFh)) return;
+          var exists = summaryStore.headers.some(function(sh){ return norm(sh) === normFh; });
+          if(!exists){
+            summaryStore.headers.push(fh);
+            summaryStore.rows.forEach(function(row){
+              row.push('');
+            });
+          }
+        });
 
+        var sttColIdx = summaryStore.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
+        var classColIdx = summaryStore.headers.findIndex(function(h){ return /khóa\s*\/\s*lớp|khóa|khoá|lớp/i.test(norm(h)); });
+        if(classColIdx === -1) classColIdx = 1;
+
+        // Ánh xạ cột từ file nạp vào sang cấu trúc file tổng
         var colMapping = [];
         fileHeaders.forEach(function(fh, fIdx){
           var normFh = norm(fh);
           var matchedIdx = summaryStore.headers.findIndex(function(ch){ return norm(ch) === normFh; });
-          if(matchedIdx === -1 && fIdx < summaryStore.headers.length && !/^stt$/i.test(normFh)){
-            matchedIdx = fIdx;
+          
+          if(matchedIdx === -1){
+            if(/họ\s*tên|họ\s*và\s*tên/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /họ\s*tên|họ\s*và\s*tên/i.test(norm(h)); });
+            } else if(/mã\s*học\s*viên|mã\s*hv/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /mã\s*học\s*viên|mã\s*hv/i.test(norm(h)); });
+            } else if(/cccd|cmnd|căn\s*cước|chứng\s*minh/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /cccd|cmnd|căn\s*cước/i.test(norm(h)); });
+            } else if(/ngày\s*sinh|năm\s*sinh|dob/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /ngày\s*sinh|năm\s*sinh/i.test(norm(h)); });
+            } else if(/giới\s*tính|nam\/nữ/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /giới\s*tính/i.test(norm(h)); });
+            } else if(/hạng\s*gplx|hạng\s*xe|hạng/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /hạng/i.test(norm(h)); });
+            } else if(/số\s*đt|sđt|điện\s*thoại/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /số\s*đt|sđt|điện\s*thoại/i.test(norm(h)); });
+            } else if(/địa\s*chỉ|nơi\s*cư\s*trú/i.test(normFh)){
+              matchedIdx = summaryStore.headers.findIndex(function(h){ return /địa\s*chỉ/i.test(norm(h)); });
+            } else if(/khóa|khoá|lớp/i.test(normFh)){
+              matchedIdx = classColIdx;
+            }
           }
           colMapping[fIdx] = matchedIdx;
         });
 
+        var fileClassTag = detectedCourse || name.replace(/\.(xlsx|xls|csv)$/i,'');
         var addedCount = 0;
         var updatedCount = 0;
 
         fileDataRows.forEach(function(r){
           var newRow = new Array(summaryStore.headers.length).fill('');
+          
+          // Điền dữ liệu từ file vào các cột tương ứng
           r.forEach(function(val, fIdx){
             var targetIdx = colMapping[fIdx];
             if(targetIdx !== -1 && targetIdx < summaryStore.headers.length){
@@ -1385,9 +1518,15 @@ function parseCourseFileSummary(file){
             }
           });
 
+          // Tự động gán cột Khóa / Lớp
+          if(classColIdx !== -1 && (!newRow[classColIdx] || newRow[classColIdx].trim() === '')){
+            newRow[classColIdx] = fileClassTag;
+          }
+
           var key = getStudentKey(newRow, summaryStore.headers);
 
           if(key && summaryStore.studentKeyMap.hasOwnProperty(key)){
+            // Học viên đã có: CẬP NHẬT thông tin, KHÔNG nhân đôi dòng
             var existingRowIndex = summaryStore.studentKeyMap[key];
             var oldRow = summaryStore.rows[existingRowIndex];
             
@@ -1399,6 +1538,7 @@ function parseCourseFileSummary(file){
             });
             updatedCount++;
           } else {
+            // Học viên mới: Thêm vào cuối bảng tính
             var currentTotal = summaryStore.rows.length + 1;
             if(sttColIdx !== -1){
               newRow[sttColIdx] = String(currentTotal);
@@ -1411,25 +1551,26 @@ function parseCourseFileSummary(file){
           }
         });
 
+        // Đánh lại số thứ tự STT chuẩn 1..N
         if(sttColIdx !== -1){
           summaryStore.rows.forEach(function(row, idx){
             row[sttColIdx] = String(idx + 1);
           });
         }
 
-        if(detectedCourse && !summaryStore.courses.includes(detectedCourse)){
-          summaryStore.courses.push(detectedCourse);
+        if(fileClassTag && !summaryStore.courses.includes(fileClassTag)){
+          summaryStore.courses.push(fileClassTag);
         }
 
         var existingFile = summaryStore.files.find(function(f){ return f.name === name; });
         if(existingFile){
           existingFile.count = fileDataRows.length;
-          existingFile.course = detectedCourse || existingFile.course;
+          existingFile.course = fileClassTag;
         } else {
           summaryStore.files.push({
             name: name,
             count: fileDataRows.length,
-            course: detectedCourse || ''
+            course: fileClassTag
           });
         }
 
@@ -1445,16 +1586,17 @@ function updateSummaryStats(){
   $('s-files-count').textContent = summaryStore.files.length;
   $('s-total').textContent = summaryStore.rows.length;
   $('s-cols').textContent = summaryStore.headers.length;
-  
   $('s-code').textContent = summaryStore.courses.length ? summaryStore.courses.join(', ') : '---';
-  $('summary-title').textContent = 'Báo cáo tổng hợp (' + summaryStore.rows.length + ' học viên)';
-  $('summary-meta').textContent = 'Đã nạp ' + summaryStore.files.length + ' lớp/file · Tổng ' + summaryStore.rows.length + ' học viên · ' + summaryStore.headers.length + ' cột dữ liệu';
 
   var tagsContainer = $('summary-files-list');
   if(tagsContainer){
-    tagsContainer.innerHTML = summaryStore.files.map(function(f){
-      return '<span class="file-tag">📄 ' + esc(f.name) + ' <b>(' + f.count + ' HV' + (f.course ? ' · ' + f.course : '') + ')</b></span>';
-    }).join('');
+    if(!summaryStore.files.length){
+      tagsContainer.innerHTML = '<span style="font-size:12px;color:var(--muted)">Chưa có file lớp nào được thêm.</span>';
+    } else {
+      tagsContainer.innerHTML = summaryStore.files.map(function(f){
+        return '<span class="file-tag">📄 ' + esc(f.name) + ' <b>(' + f.count + ' HV · ' + esc(f.course) + ')</b></span>';
+      }).join('');
+    }
   }
 }
 
@@ -1463,6 +1605,8 @@ function renderSummaryTable(){
   var rows = summaryStore.rows;
   var q = norm(summarySearchTerm.trim());
 
+  var classColIdx = headers.findIndex(function(h){ return /khóa\s*\/\s*lớp|khóa|khoá|lớp/i.test(norm(h)); });
+
   var filtered = rows.filter(function(r){
     if(!q) return true;
     return r.some(function(cell){
@@ -1470,19 +1614,23 @@ function renderSummaryTable(){
     });
   });
 
-  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Headers
+  // Excel Two-Tier Header: Row 1 = Letters (A, B, C...), Row 2 = Field Names
   var theadHtml = '<tr class="excel-col-letters"><th class="corner-cell">◿</th>' + headers.map(function(h, idx){
     return '<th title="Cột ' + toColLetter(idx) + '">' + toColLetter(idx) + '</th>';
   }).join('') + '</tr>';
   
-  theadHtml += '<tr class="excel-field-headers"><th class="row-idx-corner">#</th>' + headers.map(function(h){
-    return '<th title="' + esc(h) + '">' + esc(h) + '</th>';
+  theadHtml += '<tr class="excel-field-headers"><th class="row-idx-corner">#</th>' + headers.map(function(h, idx){
+    var isClass = idx === classColIdx;
+    return '<th class="' + (isClass ? 'col-class-head' : '') + '" title="' + esc(h) + '">' + esc(h) + '</th>';
   }).join('') + '</tr>';
   $('summary-th').innerHTML = theadHtml;
 
   if(!filtered.length){
-    $('summary-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length + 1, 1) + '" class="empty-table">Không tìm thấy thông tin phù hợp với từ khóa "' + esc(summarySearchTerm) + '".</td></tr>';
-    $('summary-sheet-status').textContent = '0 kết quả';
+    var emptyMsg = rows.length === 0 
+      ? '📋 <b>File Excel tổng đã sẵn sàng.</b><br>Bấm <b>"➕ Thêm file lớp vào File Excel tổng"</b> hoặc kéo thả các file Excel học viên vào đây để tự động cập nhật danh sách.'
+      : 'Không tìm thấy học viên nào phù hợp với từ khóa tìm kiếm "' + esc(summarySearchTerm) + '".';
+    $('summary-tb').innerHTML = '<tr><td colspan="' + Math.max(headers.length + 1, 1) + '" class="empty-table">' + emptyMsg + '</td></tr>';
+    $('summary-sheet-status').textContent = rows.length ? '0 kết quả tìm kiếm' : 'Bảng tính Excel tổng rỗng (sẵn sàng nạp file)';
   } else {
     var tbodyHtml = filtered.map(function(r, rowIndex){
       var rowNum = rowIndex + 1;
@@ -1491,11 +1639,13 @@ function renderSummaryTable(){
         var val = r[idx] != null ? String(r[idx]).trim() : '';
         var isNumeric = /^\d+$/.test(val) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val);
         var isStt = idx === 0 || /^stt$/i.test(norm(h));
+        var isClass = idx === classColIdx;
         var displayVal = isStt ? String(rowNum) : val;
-        var alignStyle = isStt ? 'text-align:center;' : (isNumeric ? 'text-align:center;' : '');
+        var alignStyle = (isStt || isClass || isNumeric) ? 'text-align:center;' : '';
         var boldStyle = (/họ\s*tên|họ\s*và\s*tên/i.test(norm(h))) ? 'font-weight:600;' : '';
+        var classCellClass = isClass ? ' col-class-cell' : '';
         
-        return '<td' + (isNumeric ? ' class="num"' : '') 
+        return '<td class="' + (isNumeric ? 'num' : '') + classCellClass + '"'
           + ' data-col="' + colLetter + '" data-row="' + rowNum + '" data-val="' + esc(displayVal) + '"'
           + ' style="' + alignStyle + boldStyle + '" title="' + esc(displayVal) + '">' 
           + esc(displayVal) + '</td>';
@@ -1505,10 +1655,8 @@ function renderSummaryTable(){
     }).join('');
     
     $('summary-tb').innerHTML = tbodyHtml;
-    $('summary-sheet-status').textContent = 'Hiển thị ' + filtered.length + ' / ' + rows.length + ' dòng dữ liệu';
+    $('summary-sheet-status').textContent = 'Hiển thị ' + filtered.length + ' / ' + rows.length + ' học viên trong file tổng';
   }
-
-  $('summary-meta').textContent = 'Tổng ' + rows.length + ' học viên từ ' + summaryStore.files.length + ' lớp' + (summarySearchTerm ? (' · Đang hiển thị ' + filtered.length + ' kết quả phù hợp') : '');
 }
 
 var summarySearchInput = $('summary-search');
@@ -1531,7 +1679,10 @@ if(summaryClearBtn){
 
 /* Xuất Excel Báo cáo tổng */
 $('summary-exp').addEventListener('click', async function(){
-  if(!summaryStore.rows.length){return;}
+  if(!summaryStore.rows.length){
+    msgSummary('Bảng tính Excel tổng hiện chưa có dữ liệu để xuất. Hãy nạp thêm file lớp.', false);
+    return;
+  }
   if(typeof ExcelJS === 'undefined'){msgSummary('Không có thư viện ExcelJS để xuất file.', false); return;}
   
   try{
@@ -1544,7 +1695,7 @@ $('summary-exp').addEventListener('click', async function(){
     var wb = new ExcelJS.Workbook();
     var ws = wb.addWorksheet('Báo cáo tổng hợp');
     
-    // Header
+    // Header Row
     var headerRow = ws.addRow(summaryStore.headers);
     headerRow.eachCell(function(cell){
       cell.font = {bold: true, color: {argb: 'FFFFFFFF'}, size: 11};
@@ -1552,7 +1703,7 @@ $('summary-exp').addEventListener('click', async function(){
       cell.alignment = {vertical: 'middle', horizontal: 'center'};
     });
     
-    // Rows
+    // Data Rows
     exportRows.forEach(function(r, rIdx){
       var rowValues = summaryStore.headers.map(function(h, idx){
         if(idx === 0 || /^stt$/i.test(norm(h))){
@@ -1582,13 +1733,17 @@ $('summary-exp').addEventListener('click', async function(){
     });
 
     var courseTag = summaryStore.courses.length ? summaryStore.courses.join('_') : 'KimThanh';
-    var expName = 'BaoCaoTongHop_' + courseTag.replace(/[^a-zA-Z0-9_-]/g,'_') + '.xlsx';
+    var expName = 'FileExcelTongHop_' + courseTag.replace(/[^a-zA-Z0-9_-]/g,'_') + '.xlsx';
     await saveFile(new Blob([await wb.xlsx.writeBuffer()],{type:'application/octet-stream'}), expName);
-    msgSummary('Đã xuất thành công file "' + expName + '" (' + exportRows.length + ' học viên).', true);
+    msgSummary('Đã xuất thành công file Excel tổng "' + expName + '" (' + exportRows.length + ' học viên).', true);
   }catch(e){
     if(!e || e.code !== 'declined') msgSummary('Không xuất được file Excel: ' + (e&&e.message||''), false);
   }
 });
+
+// Khởi tạo bảng tổng ngay khi mở ứng dụng
+updateSummaryStats();
+renderSummaryTable();
 
 })();
 </script>
