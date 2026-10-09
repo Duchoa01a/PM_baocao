@@ -1184,40 +1184,88 @@ $('course-exp').addEventListener('click', async function(){
     });
 
     var wb = new ExcelJS.Workbook();
-    var ws = wb.addWorksheet('Danh sách học viên');
+    var sheetName = (courseData.courseName ? ('Khóa ' + courseData.courseName) : 'Danh sách học viên').substring(0, 31);
+    var ws = wb.addWorksheet(sheetName);
+    ws.views = [{showGridLines: true}];
     
+    // 1. Header Row
     var headerRow = ws.addRow(courseData.headers);
+    headerRow.height = 28;
     headerRow.eachCell(function(cell){
-      cell.font = {bold: true, color: {argb: 'FFFFFFFF'}, size: 11};
-      cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF107C41'}};
-      cell.alignment = {vertical: 'middle', horizontal: 'center'};
+      cell.font = {name: 'Calibri', size: 11, bold: true, color: {argb: 'FF1E293B'}};
+      cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFF1F5F9'}};
+      cell.alignment = {vertical: 'middle', horizontal: 'center', wrapText: true};
+      cell.border = {
+        top: {style: 'thin', color: {argb: 'FF94A3B8'}},
+        left: {style: 'thin', color: {argb: 'FF94A3B8'}},
+        bottom: {style: 'medium', color: {argb: 'FF64748B'}},
+        right: {style: 'thin', color: {argb: 'FF94A3B8'}}
+      };
     });
     
+    // 2. Data Rows
     exportRows.forEach(function(r, rIdx){
+      var rowNum = rIdx + 1;
       var rowValues = courseData.headers.map(function(h, idx){
         if(idx === 0 || /^stt$/i.test(norm(h))){
-          return rIdx + 1;
+          return rowNum;
         }
-        return r[idx] || '';
+        return r[idx] != null ? String(r[idx]).trim() : '';
       });
+      
       var row = ws.addRow(rowValues);
+      row.height = 22;
+      
       row.eachCell(function(cell, colNum){
+        var colHeader = courseData.headers[colNum - 1] || '';
+        var normH = norm(colHeader);
+        var isName = /họ\s*tên|họ\s*và\s*tên/i.test(normH);
+        var isAddress = /địa\s*chỉ|ghi\s*chú/i.test(normH);
+        var alignH = (isName || isAddress) ? 'left' : 'center';
+        
+        cell.font = {
+          name: 'Calibri',
+          size: 11,
+          bold: isName,
+          color: {argb: 'FF0F172A'}
+        };
+        
+        cell.alignment = {
+          vertical: 'middle',
+          horizontal: alignH
+        };
+        
         cell.border = {
-          top: {style:'thin', color:{argb:'FFD1D5DB'}},
-          left: {style:'thin', color:{argb:'FFD1D5DB'}},
-          bottom: {style:'thin', color:{argb:'FFD1D5DB'}},
-          right: {style:'thin', color:{argb:'FFD1D5DB'}}
+          top: {style: 'thin', color: {argb: 'FFE2E8F0'}},
+          left: {style: 'thin', color: {argb: 'FFE2E8F0'}},
+          bottom: {style: 'thin', color: {argb: 'FFE2E8F0'}},
+          right: {style: 'thin', color: {argb: 'FFE2E8F0'}}
         };
       });
     });
 
+    // 3. Auto column widths
     ws.columns.forEach(function(col, i){
-      var maxLen = String(courseData.headers[i]||'').length + 4;
-      exportRows.slice(0, 50).forEach(function(r){
-        var cellLen = String(r[i]||'').length;
-        if(cellLen > maxLen) maxLen = Math.min(cellLen + 3, 40);
+      var colHeader = courseData.headers[i] || '';
+      var normH = norm(colHeader);
+      var minWidth = 12;
+      if(/^stt$/i.test(normH)) minWidth = 8;
+      else if(/khóa|khoá|lớp/i.test(normH)) minWidth = 18;
+      else if(/mã\s*học\s*viên|mã\s*hv/i.test(normH)) minWidth = 26;
+      else if(/họ\s*tên|họ\s*và\s*tên/i.test(normH)) minWidth = 26;
+      else if(/ngày\s*sinh|dob/i.test(normH)) minWidth = 14;
+      else if(/giới\s*tính/i.test(normH)) minWidth = 12;
+      else if(/cccd|cmnd/i.test(normH)) minWidth = 18;
+      else if(/hạng/i.test(normH)) minWidth = 14;
+      else if(/điện\s*thoại|sđt/i.test(normH)) minWidth = 16;
+      
+      var maxLen = String(colHeader).length + 4;
+      exportRows.slice(0, 100).forEach(function(r){
+        var cellVal = r[i] != null ? String(r[i]).trim() : '';
+        if(cellVal.length > maxLen) maxLen = cellVal.length;
       });
-      col.width = Math.max(maxLen, 12);
+      
+      col.width = Math.max(maxLen + 3, minWidth);
     });
 
     var expName = 'ThongTinKhoaHoc_' + (courseData.courseName ? courseData.courseName.replace(/[^a-zA-Z0-9_-]/g,'_') : 'KimThanh') + '.xlsx';
@@ -1863,43 +1911,87 @@ $('summary-exp').addEventListener('click', async function(){
     });
 
     var wb = new ExcelJS.Workbook();
-    var ws = wb.addWorksheet('Báo cáo tổng hợp');
+    var ws = wb.addWorksheet('FileExcelTongHop');
+    ws.views = [{showGridLines: true}];
     
-    // Header Row
+    // 1. Header Row
     var headerRow = ws.addRow(summaryStore.headers);
+    headerRow.height = 28;
     headerRow.eachCell(function(cell){
-      cell.font = {bold: true, color: {argb: 'FFFFFFFF'}, size: 11};
-      cell.fill = {type: 'pattern', pattern:'solid', fgColor:{argb:'FF107C41'}};
-      cell.alignment = {vertical: 'middle', horizontal: 'center'};
+      cell.font = {name: 'Calibri', size: 11, bold: true, color: {argb: 'FF1E293B'}};
+      cell.fill = {type: 'pattern', pattern: 'solid', fgColor: {argb: 'FFF1F5F9'}};
+      cell.alignment = {vertical: 'middle', horizontal: 'center', wrapText: true};
+      cell.border = {
+        top: {style: 'thin', color: {argb: 'FF94A3B8'}},
+        left: {style: 'thin', color: {argb: 'FF94A3B8'}},
+        bottom: {style: 'medium', color: {argb: 'FF64748B'}},
+        right: {style: 'thin', color: {argb: 'FF94A3B8'}}
+      };
     });
     
-    // Data Rows
+    // 2. Data Rows
     exportRows.forEach(function(r, rIdx){
+      var rowNum = rIdx + 1;
       var rowValues = summaryStore.headers.map(function(h, idx){
         if(idx === 0 || /^stt$/i.test(norm(h))){
-          return rIdx + 1;
+          return rowNum;
         }
-        return r[idx] || '';
+        return r[idx] != null ? String(r[idx]).trim() : '';
       });
+      
       var row = ws.addRow(rowValues);
+      row.height = 22;
+      
       row.eachCell(function(cell, colNum){
+        var colHeader = summaryStore.headers[colNum - 1] || '';
+        var normH = norm(colHeader);
+        var isName = /họ\s*tên|họ\s*và\s*tên/i.test(normH);
+        var isAddress = /địa\s*chỉ|ghi\s*chú/i.test(normH);
+        var alignH = (isName || isAddress) ? 'left' : 'center';
+        
+        cell.font = {
+          name: 'Calibri',
+          size: 11,
+          bold: isName,
+          color: {argb: 'FF0F172A'}
+        };
+        
+        cell.alignment = {
+          vertical: 'middle',
+          horizontal: alignH
+        };
+        
         cell.border = {
-          top: {style:'thin', color:{argb:'FFD1D5DB'}},
-          left: {style:'thin', color:{argb:'FFD1D5DB'}},
-          bottom: {style:'thin', color:{argb:'FFD1D5DB'}},
-          right: {style:'thin', color:{argb:'FFD1D5DB'}}
+          top: {style: 'thin', color: {argb: 'FFE2E8F0'}},
+          left: {style: 'thin', color: {argb: 'FFE2E8F0'}},
+          bottom: {style: 'thin', color: {argb: 'FFE2E8F0'}},
+          right: {style: 'thin', color: {argb: 'FFE2E8F0'}}
         };
       });
     });
 
-    // Auto column widths
+    // 3. Auto column widths
     ws.columns.forEach(function(col, i){
-      var maxLen = String(summaryStore.headers[i]||'').length + 4;
-      exportRows.slice(0, 50).forEach(function(r){
-        var cellLen = String(r[i]||'').length;
-        if(cellLen > maxLen) maxLen = Math.min(cellLen + 3, 40);
+      var colHeader = summaryStore.headers[i] || '';
+      var normH = norm(colHeader);
+      var minWidth = 12;
+      if(/^stt$/i.test(normH)) minWidth = 8;
+      else if(/khóa|khoá|lớp/i.test(normH)) minWidth = 18;
+      else if(/mã\s*học\s*viên|mã\s*hv/i.test(normH)) minWidth = 26;
+      else if(/họ\s*tên|họ\s*và\s*tên/i.test(normH)) minWidth = 26;
+      else if(/ngày\s*sinh|dob/i.test(normH)) minWidth = 14;
+      else if(/giới\s*tính/i.test(normH)) minWidth = 12;
+      else if(/cccd|cmnd/i.test(normH)) minWidth = 18;
+      else if(/hạng/i.test(normH)) minWidth = 14;
+      else if(/điện\s*thoại|sđt/i.test(normH)) minWidth = 16;
+      
+      var maxLen = String(colHeader).length + 4;
+      exportRows.slice(0, 100).forEach(function(r){
+        var cellVal = r[i] != null ? String(r[i]).trim() : '';
+        if(cellVal.length > maxLen) maxLen = cellVal.length;
       });
-      col.width = Math.max(maxLen, 12);
+      
+      col.width = Math.max(maxLen + 3, minWidth);
     });
 
     var courseTag = summaryStore.courses.length ? summaryStore.courses.join('_') : 'KimThanh';
