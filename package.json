@@ -1,0 +1,17 @@
+{
+  "name": "bao-cao-het-khoa",
+  "productName": "BaoCaoHetKhoa",
+  "version": "1.0.0",
+  "description": "Phần mềm gộp báo cáo cabin Viettel & Ecotek và tra cứu thông tin khóa học lái xe - Trung tâm GDNN&SHLX Kim Thành",
+  "main": "resources/app/main.js",
+  "scripts": {
+    "start": "electron resources/app",
+    "package": "electron-packager ./resources/app BaoCaoHetKhoa --platform=win32 --arch=x64 --icon=resources/app/icon.ico --out=dist --overwrite"
+  },
+  "author": "Trung tâm GDNN&SHLX Kim Thành",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/packager": "^18.3.6",
+    "electron": "^33.2.0"
+  }
+}

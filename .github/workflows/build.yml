@@ -1,0 +1,63 @@
+name: Build & Release Windows App
+
+on:
+  push:
+    branches: [ master, main ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Package Electron App for Windows (64-bit)
+        run: npm run package
+
+      - name: Compress Build Output into ZIP
+        shell: pwsh
+        run: |
+          Compress-Archive -Path dist/BaoCaoHetKhoa-win32-x64/* -DestinationPath dist/BaoCaoHetKhoa_v1.0.0_win64.zip
+
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: BaoCaoHetKhoa-Windows-App
+          path: dist/BaoCaoHetKhoa_v1.0.0_win64.zip
+
+      - name: Create / Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        with:
+          tag_name: v1.0.0
+          name: Release v1.0.0 - Báo cáo hết khóa & Thông tin khóa học
+          body: |
+            ## 🎉 Bản phát hành ứng dụng Báo cáo hết khóa & Thông tin khóa học
+            **Trung tâm GDNN&SHLX Kim Thành**
+
+            ### 🚀 Chức năng chính:
+            1. **Báo cáo hết khóa:** Tự động gộp báo cáo cabin Viettel & Ecotek, kiểm tra điều kiện đáp ứng, lọc và xuất Excel theo mẫu.
+            2. **Thông tin khóa học:** Tra cứu thông tin học viên theo khóa, tìm kiếm nhanh và xuất danh sách Excel.
+
+            ### 📥 Hướng dẫn tải và sử dụng:
+            1. Tải file **`BaoCaoHetKhoa_v1.0.0_win64.zip`** ở phần Assets bên dưới về máy tính.
+            2. Giải nén file `.zip` ra một thư mục (ví dụ `D:\BaoCaoHetKhoa`).
+            3. Bấm đúp file **`BaoCaoHetKhoa.exe`** để mở và sử dụng ngay (không cần cài đặt, không cần mạng).
+          files: dist/BaoCaoHetKhoa_v1.0.0_win64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
