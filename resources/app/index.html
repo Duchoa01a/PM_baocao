@@ -38,10 +38,10 @@ body{background:var(--paper);color:var(--ink);font-family:'Be Vietnam Pro',-appl
 /* Header */
 .top{background:linear-gradient(180deg,var(--asp),var(--asp2));padding:24px 20px 58px;position:relative}
 .top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:repeating-linear-gradient(90deg,var(--amber) 0 28px,transparent 28px 48px)}
-.in{max-width:960px;margin:0 auto}
+.in{max-width:1200px;margin:0 auto}
 .org{color:var(--amber);font-size:13px;font-weight:600;margin:0 0 6px;letter-spacing:0.5px}
 h1{color:#fff;font-size:26px;margin:0 0 6px;font-weight:700}
-.sub{color:#B9C3CC;font-size:14px;line-height:1.55;margin:0 0 18px;max-width:65ch}
+.sub{color:#B9C3CC;font-size:14px;line-height:1.55;margin:0 0 18px;max-width:75ch}
 
 /* Tab Switcher */
 .nav-tabs{display:inline-flex;background:rgba(0,0,0,.28);padding:4px;border-radius:12px;gap:4px;border:1px solid rgba(255,255,255,.15)}
@@ -52,7 +52,7 @@ h1{color:#fff;font-size:26px;margin:0 0 6px;font-weight:700}
 .nav-tab.active .badge{background:var(--asp);color:#fff}
 
 /* Main Container */
-.wrap{max-width:960px;margin:-36px auto 50px;padding:0 20px;position:relative}
+.wrap{max-width:1200px;margin:-36px auto 50px;padding:0 20px;position:relative}
 .tab-content{display:none}
 .tab-content.active{display:block;animation:fadeIn .2s ease-out}
 @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
@@ -111,13 +111,28 @@ h1{color:#fff;font-size:26px;margin:0 0 6px;font-weight:700}
 .clear-btn{border:1px solid var(--line);background:var(--panel);color:var(--soft);border-radius:9px;padding:8px 14px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .clear-btn:hover{border-color:var(--amber);color:var(--ink)}
 
-/* Table */
-.tw{overflow-x:auto;max-height:540px;overflow-y:auto;border-top:1px solid var(--line)}
-table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:720px}
-th{position:sticky;top:0;background:var(--paper);text-align:left;font-weight:600;color:var(--soft);padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:2}
-td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+/* Table & Scroll container */
+.tw{overflow-x:auto;max-height:560px;overflow-y:auto;border-top:1px solid var(--line)}
+.tw::-webkit-scrollbar{height:7px;width:7px}
+.tw::-webkit-scrollbar-track{background:var(--paper)}
+.tw::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+.tw::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+table{border-collapse:collapse;width:100%;font-size:13.5px;table-layout:auto}
+th{position:sticky;top:0;background:var(--paper);text-align:left;font-weight:600;color:var(--soft);padding:11px 14px;border-bottom:1px solid var(--line);white-space:nowrap;z-index:2}
+td{padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;max-width:320px;overflow:hidden;text-overflow:ellipsis}
 tbody tr:hover td{background:rgba(230,163,57,.04)}
 tr.chg td{background:rgba(122,91,181,.08)}
+
+/* Table 1 Column alignments */
+#table-report th:first-child, #table-report td:first-child{width:48px;text-align:center}
+#table-report th:nth-child(3), #table-report td:nth-child(3),
+#table-report th:nth-child(4), #table-report td:nth-child(4),
+#table-report th:nth-child(5), #table-report td:nth-child(5),
+#table-report th:nth-child(6), #table-report td:nth-child(6),
+#table-report th:nth-child(7), #table-report td:nth-child(7),
+#table-report th:nth-child(8), #table-report td:nth-child(8){text-align:center}
+
 .tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:100px;border:1px solid}
 .tag.v{color:var(--blue);border-color:var(--blue)}.tag.e{color:var(--eco);border-color:var(--eco)}.tag.n{color:var(--warn);border-color:var(--warn)}
 .old{color:var(--muted);text-decoration:line-through;font-size:12px;margin-right:6px}
@@ -200,7 +215,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
       </div>
       <div id="wn"></div>
       <div class="tw">
-        <table>
+        <table id="table-report">
           <thead>
             <tr>
               <th>STT</th>
@@ -256,7 +271,7 @@ tr.chg td{background:rgba(122,91,181,.08)}
       </div>
 
       <div class="tw">
-        <table>
+        <table id="table-course">
           <thead id="course-th"></thead>
           <tbody id="course-tb"></tbody>
         </table>
@@ -395,7 +410,7 @@ function renderMergeList(){
   }
   $('tb').innerHTML=L.map(function(r){
     var tag=r.cabin==='Cabin Viettel'?'<span class="tag v">Cabin Viettel</span>':r.cabin?'<span class="tag e">Cabin Ecotek</span>':'<span class="tag n">Không đáp ứng</span>';
-    return'<tr'+(r.chg?' class="chg"':'')+'><td class="num">'+r.stt+'</td><td>'+esc(r.name)+'</td><td class="num">'+esc(r.id)+'</td><td class="num">'+esc(r.dob)+'</td><td class="num">'+(r.old?'<span class="old">'+r.old.time+'</span>':'')+(r.timeRaw||r.time)+'</td><td class="num">'+(r.old?'<span class="old">'+r.old.n+'</span>':'')+r.n+'</td><td>'+(r.ok?'Đáp ứng':'Không đáp ứng')+'</td><td>'+tag+'</td></tr>';
+    return'<tr'+(r.chg?' class="chg"':'')+'><td class="num">'+r.stt+'</td><td title="'+esc(r.name)+'"><b>'+esc(r.name)+'</b></td><td class="num">'+esc(r.id)+'</td><td class="num">'+esc(r.dob)+'</td><td class="num">'+(r.old?'<span class="old">'+r.old.time+'</span>':'')+(r.timeRaw||r.time)+'</td><td class="num">'+(r.old?'<span class="old">'+r.old.n+'</span>':'')+r.n+'</td><td>'+(r.ok?'Đáp ứng':'Không đáp ứng')+'</td><td>'+tag+'</td></tr>';
   }).join('');
 }
 
@@ -495,19 +510,46 @@ function loadCourseFile(file){
         return;
       }
 
-      // Xác định dòng Header
-      var headerRow = raw.find(function(r){
+      // 1. Xác định dòng Header
+      var headIndex = raw.findIndex(function(r){
         return r.some(function(v){return /họ\s*tên|họ\s*và\s*tên|mã\s*hv|mã\s*học\s*viên|ngày\s*sinh|cccd|cmnd|stt|số\s*tt/i.test(v)})
-      }) || raw[0];
-      var headIndex = raw.indexOf(headerRow);
-      
-      var headers = headerRow.map(function(v, i){
-        var colName = String(v||'').trim();
+      });
+      if(headIndex === -1) headIndex = 0;
+      var headerRow = raw[headIndex];
+
+      // 2. Tìm cột cuối cùng thực sự có dữ liệu và loại bỏ các cột rỗng thừa
+      var dataRowsRaw = raw.slice(headIndex + 1);
+      var maxCol = 0;
+      headerRow.forEach(function(h, idx){
+        if(String(h||'').trim().length > 0) maxCol = Math.max(maxCol, idx);
+      });
+      dataRowsRaw.forEach(function(r){
+        for(var c = r.length - 1; c >= 0; c--){
+          if(r[c] != null && String(r[c]).trim().length > 0){
+            if(c > maxCol) maxCol = c;
+            break;
+          }
+        }
+      });
+
+      var validColIndices = [];
+      for(var c = 0; c <= maxCol; c++){
+        var hasHeader = String(headerRow[c]||'').trim().length > 0;
+        var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim().length > 0; });
+        if(hasHeader || hasData){
+          validColIndices.push(c);
+        }
+      }
+
+      var headers = validColIndices.map(function(c, i){
+        var colName = String(headerRow[c]||'').trim();
         return colName || ('Cột ' + (i+1));
       });
 
-      var dataRows = raw.slice(headIndex+1).filter(function(r){
-        return r.some(function(v){return String(v).trim().length > 0});
+      var dataRows = dataRowsRaw.map(function(r){
+        return validColIndices.map(function(c){ return r[c] != null ? String(r[c]).trim() : ''; });
+      }).filter(function(r){
+        return r.some(function(v){ return v.length > 0; });
       });
 
       if(!dataRows.length){
@@ -560,7 +602,7 @@ function renderCourseTable(){
     });
   });
 
-  var theadHtml = '<tr>' + headers.map(function(h){return '<th>' + esc(h) + '</th>';}).join('') + '</tr>';
+  var theadHtml = '<tr>' + headers.map(function(h){return '<th title="' + esc(h) + '">' + esc(h) + '</th>';}).join('') + '</tr>';
   $('course-th').innerHTML = theadHtml;
 
   if(!filtered.length){
@@ -570,7 +612,7 @@ function renderCourseTable(){
       return '<tr>' + headers.map(function(h, idx){
         var val = r[idx] != null ? String(r[idx]).trim() : '';
         var isNumeric = /^\d+$/.test(val) || /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(val);
-        return '<td' + (isNumeric ? ' class="num"' : '') + '>' + esc(val) + '</td>';
+        return '<td' + (isNumeric ? ' class="num"' : '') + ' title="' + esc(val) + '">' + esc(val) + '</td>';
       }).join('') + '</tr>';
     }).join('');
     $('course-tb').innerHTML = tbodyHtml;
