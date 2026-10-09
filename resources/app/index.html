@@ -1208,42 +1208,97 @@ var DEFAULT_SUMMARY_HEADERS = [
 
 var STORAGE_KEY = 'PM_BAOCAO_SUMMARY_STORAGE_V2';
 
+/* Hàm chuẩn hóa File Excel tổng: ĐẢM BẢO CHỈ CÓ DUY NHẤT 1 CỘT KHÓA / LỚP */
+function sanitizeSummaryStore(store){
+  if(!store || !Array.isArray(store.headers) || !Array.isArray(store.rows)) return store;
+  
+  // 1. Tìm tất cả các chỉ số cột liên quan đến Khóa / Lớp
+  var classIndices = [];
+  store.headers.forEach(function(h, idx){
+    if(/khóa|khoá|lớp/i.test(norm(h))){
+      classIndices.push(idx);
+    }
+  });
+
+  // Tìm chỉ số cột STT
+  var sttIdx = store.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
+  if(sttIdx === -1 && store.headers[0] && /^stt/i.test(norm(store.headers[0]))) sttIdx = 0;
+
+  // Thu thập các cột dữ liệu khác (không phải STT, không phải Khóa/Lớp) và loại bỏ trùng tên
+  var otherCols = [];
+  var seenNorm = {'stt':true, 'so tt':true, 'khoa / lop':true, 'khoa':true, 'lop':true, 'khoa - lop':true};
+
+  store.headers.forEach(function(h, idx){
+    var nh = norm(h);
+    if(idx === sttIdx || classIndices.includes(idx)) return;
+    if(!seenNorm[nh]){
+      seenNorm[nh] = true;
+      otherCols.push({name: h, oldIdx: idx});
+    }
+  });
+
+  // Cấu trúc chuẩn mực: Cột 0 = STT, Cột 1 = DUY NHẤT "Khóa / Lớp", sau đó là các cột khác
+  var newHeaders = ['STT', 'Khóa / Lớp'];
+  otherCols.forEach(function(c){ newHeaders.push(c.name); });
+
+  // Chiếu và chuyển đổi từng dòng dữ liệu
+  var newRows = store.rows.map(function(oldRow, rIdx){
+    var newRow = [String(rIdx + 1), ''];
+    
+    // Gộp tất cả dữ liệu từ các cột Khóa/Lớp cũ vào đúng ô cột 1
+    var classVal = '';
+    classIndices.forEach(function(cIdx){
+      var v = String(oldRow[cIdx] || '').trim();
+      if(v && !classVal) classVal = v;
+      else if(v && classVal && v !== classVal && !classVal.includes(v)){
+        classVal = classVal + ' - ' + v;
+      }
+    });
+    newRow[1] = classVal;
+
+    // Chuyển dữ liệu các cột còn lại
+    otherCols.forEach(function(c){
+      newRow.push(oldRow[c.oldIdx] != null ? String(oldRow[c.oldIdx]).trim() : '');
+    });
+
+    return newRow;
+  });
+
+  store.headers = newHeaders;
+  store.rows = newRows;
+
+  // Cập nhật lại bản đồ khóa học viên để tránh trùng lặp
+  store.studentKeyMap = {};
+  store.rows.forEach(function(r, idx){
+    var key = getStudentKey(r, store.headers);
+    if(key) store.studentKeyMap[key] = idx;
+  });
+
+  return store;
+}
+
 function loadPersistedSummaryStore(){
   try{
     var raw = localStorage.getItem(STORAGE_KEY);
     if(raw){
       var parsed = JSON.parse(raw);
       if(parsed && Array.isArray(parsed.rows) && Array.isArray(parsed.headers)){
-        // Gộp nếu có 2 cột riêng Khóa và Lớp
-        var kIdx = parsed.headers.findIndex(function(h){ return /^khóa$|^khoá$/i.test(norm(h)); });
-        var lIdx = parsed.headers.findIndex(function(h){ return /^lớp$/i.test(norm(h)); });
-        if(kIdx !== -1 && lIdx !== -1){
-          parsed.rows.forEach(function(row){
-            var k = String(row[kIdx]||'').trim();
-            var l = String(row[lIdx]||'').trim();
-            row[kIdx] = (k && l && k !== l) ? (k + ' - ' + l) : (k || l);
-          });
-          parsed.headers[kIdx] = 'Khóa / Lớp';
-          parsed.headers.splice(lIdx, 1);
-          parsed.rows.forEach(function(row){
-            row.splice(lIdx, 1);
-          });
-        }
-        return parsed;
+        return sanitizeSummaryStore(parsed);
       }
     }
   }catch(e){}
-  return {
+  return sanitizeSummaryStore({
     files: [],
     headers: DEFAULT_SUMMARY_HEADERS.slice(),
     rows: [],
     courses: [],
     studentKeyMap: {}
-  };
+  });
 }
 
 function saveSummaryStore(){
   try{
+    sanitizeSummaryStore(summaryStore);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(summaryStore));
   }catch(e){}
 }
@@ -1458,18 +1513,8 @@ function parseCourseFileSummary(file){
           return;
         }
 
-        // Đảm bảo cấu trúc file tổng LUÔN CÓ CỘT "Khóa / Lớp"
-        if(!summaryStore.headers || !summaryStore.headers.length){
-          summaryStore.headers = DEFAULT_SUMMARY_HEADERS.slice();
-        } else {
-          var hasClassCol = summaryStore.headers.some(function(h){ return /khóa|khoá|lớp/i.test(norm(h)); });
-          if(!hasClassCol){
-            summaryStore.headers.splice(1, 0, 'Khóa / Lớp');
-            summaryStore.rows.forEach(function(row){
-              row.splice(1, 0, '');
-            });
-          }
-        }
+        // Đảm bảo cấu trúc file tổng LUÔN CÓ DUY NHẤT 1 CỘT "Khóa / Lớp"
+        sanitizeSummaryStore(summaryStore);
 
         // Tự động mở rộng thêm các cột mới từ file nạp vào nếu chưa có
         fileHeaders.forEach(function(fh){
@@ -1484,9 +1529,8 @@ function parseCourseFileSummary(file){
           }
         });
 
-        var sttColIdx = summaryStore.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
-        var classColIdx = summaryStore.headers.findIndex(function(h){ return /khóa\s*\/\s*lớp|khóa|khoá|lớp/i.test(norm(h)); });
-        if(classColIdx === -1) classColIdx = 1;
+        var sttColIdx = 0;
+        var classColIdx = 1;
 
         // Xác định các cột Khóa, Lớp trong file nạp vào để gộp chung 1 cột
         var fileKhoaCol = -1;
@@ -1604,12 +1648,8 @@ function parseCourseFileSummary(file){
           }
         });
 
-        // Đánh lại số thứ tự STT chuẩn 1..N
-        if(sttColIdx !== -1){
-          summaryStore.rows.forEach(function(row, idx){
-            row[sttColIdx] = String(idx + 1);
-          });
-        }
+        // Chuẩn hóa và làm sạch bảng tính tổng
+        sanitizeSummaryStore(summaryStore);
 
         if(fileClassTag && !summaryStore.courses.includes(fileClassTag)){
           summaryStore.courses.push(fileClassTag);
