@@ -1208,9 +1208,10 @@ var DEFAULT_SUMMARY_HEADERS = [
 
 var STORAGE_KEY = 'PM_BAOCAO_SUMMARY_STORAGE_V2';
 
-/* Hàm chuẩn hóa File Excel tổng: ĐẢM BẢO CHỈ CÓ DUY NHẤT 1 CỘT KHÓA / LỚP */
+/* Hàm chuẩn hóa File Excel tổng: CHỈ GIỮ ĐÚNG CÁC CỘT CỦA FILE EXCEL TẢI LÊN + CỘT KHÓA HỌC */
 function sanitizeSummaryStore(store){
   if(!store || !Array.isArray(store.headers) || !Array.isArray(store.rows)) return store;
+  if(!store.headers.length && !store.rows.length) return store;
   
   // 1. Tìm tất cả các chỉ số cột liên quan đến Khóa / Lớp
   var classIndices = [];
@@ -1224,9 +1225,9 @@ function sanitizeSummaryStore(store){
   var sttIdx = store.headers.findIndex(function(h){ return /^stt$|^số\s*tt$/i.test(norm(h)); });
   if(sttIdx === -1 && store.headers[0] && /^stt/i.test(norm(store.headers[0]))) sttIdx = 0;
 
-  // Thu thập các cột dữ liệu khác (không phải STT, không phải Khóa/Lớp) và loại bỏ trùng tên
+  // Thu thập các cột dữ liệu thực tế (loại trừ STT và các cột Khóa/Lớp)
   var otherCols = [];
-  var seenNorm = {'stt':true, 'so tt':true, 'khoa / lop':true, 'khoa':true, 'lop':true, 'khoa - lop':true};
+  var seenNorm = {'stt':true, 'so tt':true, 'khoa / lop':true, 'khoa':true, 'lop':true, 'khoa - lop':true, 'khoa hoc':true};
 
   store.headers.forEach(function(h, idx){
     var nh = norm(h);
@@ -1237,15 +1238,15 @@ function sanitizeSummaryStore(store){
     }
   });
 
-  // Cấu trúc chuẩn mực: Cột 0 = STT, Cột 1 = DUY NHẤT "Khóa / Lớp", sau đó là các cột khác
-  var newHeaders = ['STT', 'Khóa / Lớp'];
+  // Cấu trúc chuẩn xác: STT, Khóa học, sau đó là các cột thực tế từ file Excel
+  var newHeaders = ['STT', 'Khóa học'];
   otherCols.forEach(function(c){ newHeaders.push(c.name); });
 
-  // Chiếu và chuyển đổi từng dòng dữ liệu
+  // Chiếu và chuyển đổi dữ liệu các dòng
   var newRows = store.rows.map(function(oldRow, rIdx){
     var newRow = [String(rIdx + 1), ''];
     
-    // Gộp tất cả dữ liệu từ các cột Khóa/Lớp cũ vào đúng ô cột 1
+    // Lấy giá trị Khóa học
     var classVal = '';
     classIndices.forEach(function(cIdx){
       var v = String(oldRow[cIdx] || '').trim();
@@ -1256,7 +1257,7 @@ function sanitizeSummaryStore(store){
     });
     newRow[1] = classVal;
 
-    // Chuyển dữ liệu các cột còn lại
+    // Lấy dữ liệu các cột thực tế
     otherCols.forEach(function(c){
       newRow.push(oldRow[c.oldIdx] != null ? String(oldRow[c.oldIdx]).trim() : '');
     });
@@ -1264,10 +1265,23 @@ function sanitizeSummaryStore(store){
     return newRow;
   });
 
+  // 2. LOẠI BỎ TẤT CẢ CÁC CỘT HOÀN TOÀN RỖNG (không có dữ liệu từ file nạp vào)
+  if(newRows.length > 0){
+    for(var c = newHeaders.length - 1; c >= 2; c--){
+      var hasAnyData = newRows.some(function(row){
+        return row[c] != null && String(row[c]).trim().length > 0;
+      });
+      if(!hasAnyData){
+        newHeaders.splice(c, 1);
+        newRows.forEach(function(row){ row.splice(c, 1); });
+      }
+    }
+  }
+
   store.headers = newHeaders;
   store.rows = newRows;
 
-  // Cập nhật lại bản đồ khóa học viên để tránh trùng lặp
+  // Cập nhật lại bản đồ khóa học viên
   store.studentKeyMap = {};
   store.rows.forEach(function(r, idx){
     var key = getStudentKey(r, store.headers);
@@ -1282,18 +1296,18 @@ function loadPersistedSummaryStore(){
     var raw = localStorage.getItem(STORAGE_KEY);
     if(raw){
       var parsed = JSON.parse(raw);
-      if(parsed && Array.isArray(parsed.rows) && Array.isArray(parsed.headers)){
+      if(parsed && Array.isArray(parsed.rows) && Array.isArray(parsed.headers) && parsed.rows.length > 0){
         return sanitizeSummaryStore(parsed);
       }
     }
   }catch(e){}
-  return sanitizeSummaryStore({
+  return {
     files: [],
-    headers: DEFAULT_SUMMARY_HEADERS.slice(),
+    headers: [],
     rows: [],
     courses: [],
     studentKeyMap: {}
-  });
+  };
 }
 
 function saveSummaryStore(){
@@ -1337,7 +1351,7 @@ function bindSummaryDrop(){
       if(summaryStore.rows.length && !confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu file Excel tổng để làm mới?')) return;
       summaryStore = {
         files: [],
-        headers: DEFAULT_SUMMARY_HEADERS.slice(),
+        headers: [],
         rows: [],
         courses: [],
         studentKeyMap: {}
@@ -1513,26 +1527,35 @@ function parseCourseFileSummary(file){
           return;
         }
 
-        // Đảm bảo cấu trúc file tổng LUÔN CÓ DUY NHẤT 1 CỘT "Khóa / Lớp"
-        sanitizeSummaryStore(summaryStore);
-
-        // Tự động mở rộng thêm các cột mới từ file nạp vào nếu chưa có
-        fileHeaders.forEach(function(fh){
-          var normFh = norm(fh);
-          if(/stt|số\s*tt|khóa|khoá|lớp/i.test(normFh)) return;
-          var exists = summaryStore.headers.some(function(sh){ return norm(sh) === normFh; });
-          if(!exists){
-            summaryStore.headers.push(fh);
-            summaryStore.rows.forEach(function(row){
-              row.push('');
-            });
-          }
-        });
+        // Nếu là file đầu tiên hoặc bảng đang trống: LẤY CHÍNH XÁC CÁC CỘT TỪ FILE NẠP VÀO + CỘT KHÓA HỌC
+        if(!summaryStore.headers || !summaryStore.headers.length || !summaryStore.rows.length){
+          var initialHeaders = ['STT', 'Khóa học'];
+          fileHeaders.forEach(function(fh){
+            var n = norm(fh);
+            if(/^stt$|^số\s*tt$|khóa|khoá|lớp/i.test(n)) return;
+            initialHeaders.push(fh);
+          });
+          summaryStore.headers = initialHeaders;
+          summaryStore.rows = [];
+        } else {
+          // Nếu đã có dữ liệu trước, chỉ thêm các cột thực tế mới nếu file này có
+          fileHeaders.forEach(function(fh){
+            var n = norm(fh);
+            if(/^stt$|^số\s*tt$|khóa|khoá|lớp/i.test(n)) return;
+            var exists = summaryStore.headers.some(function(sh){ return norm(sh) === n; });
+            if(!exists){
+              summaryStore.headers.push(fh);
+              summaryStore.rows.forEach(function(row){
+                row.push('');
+              });
+            }
+          });
+        }
 
         var sttColIdx = 0;
         var classColIdx = 1;
 
-        // Xác định các cột Khóa, Lớp trong file nạp vào để gộp chung 1 cột
+        // Xác định các cột Khóa, Lớp trong file nạp vào để gộp chung vào 1 cột Khóa học duy nhất
         var fileKhoaCol = -1;
         var fileLopCol = -1;
         var fileKhoaLopCol = -1;
@@ -1547,35 +1570,15 @@ function parseCourseFileSummary(file){
           }
         });
 
-        // Ánh xạ các cột thông thường từ file nạp vào sang cấu trúc file tổng
+        // Ánh xạ các cột thông thường từ file nạp vào sang đúng cột tương ứng
         var colMapping = [];
         fileHeaders.forEach(function(fh, fIdx){
           var normFh = norm(fh);
-          if(fIdx === fileKhoaCol || fIdx === fileLopCol || fIdx === fileKhoaLopCol){
-            colMapping[fIdx] = -1; // Xử lý riêng vào cột Khóa / Lớp duy nhất
+          if(fIdx === fileKhoaCol || fIdx === fileLopCol || fIdx === fileKhoaLopCol || /^stt$|^số\s*tt$/i.test(normFh)){
+            colMapping[fIdx] = -1; // Xử lý riêng
             return;
           }
-          var matchedIdx = summaryStore.headers.findIndex(function(ch){ return norm(ch) === normFh; });
-          
-          if(matchedIdx === -1){
-            if(/họ\s*tên|họ\s*và\s*tên/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /họ\s*tên|họ\s*và\s*tên/i.test(norm(h)); });
-            } else if(/mã\s*học\s*viên|mã\s*hv/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /mã\s*học\s*viên|mã\s*hv/i.test(norm(h)); });
-            } else if(/cccd|cmnd|căn\s*cước|chứng\s*minh/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /cccd|cmnd|căn\s*cước/i.test(norm(h)); });
-            } else if(/ngày\s*sinh|năm\s*sinh|dob/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /ngày\s*sinh|năm\s*sinh/i.test(norm(h)); });
-            } else if(/giới\s*tính|nam\/nữ/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /giới\s*tính/i.test(norm(h)); });
-            } else if(/hạng\s*gplx|hạng\s*xe|hạng/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /hạng/i.test(norm(h)); });
-            } else if(/số\s*đt|sđt|điện\s*thoại/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /số\s*đt|sđt|điện\s*thoại/i.test(norm(h)); });
-            } else if(/địa\s*chỉ|nơi\s*cư\s*trú/i.test(normFh)){
-              matchedIdx = summaryStore.headers.findIndex(function(h){ return /địa\s*chỉ/i.test(norm(h)); });
-            }
-          }
+          var matchedIdx = summaryStore.headers.findIndex(function(sh){ return norm(sh) === normFh; });
           colMapping[fIdx] = matchedIdx;
         });
 
