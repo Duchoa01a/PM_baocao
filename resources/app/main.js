@@ -1,6 +1,6 @@
 const {app,BrowserWindow,Menu,shell}=require('electron');
 const path=require('path');
-app.setAppUserModelId('vn.kimthanh.baocaohetkhoa');
+app.setAppUserModelId('vn.kimthanh.phanmembaocao');
 if(!app.requestSingleInstanceLock()){app.quit()}
 let win;
 function create(){
