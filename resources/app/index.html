@@ -1003,7 +1003,7 @@ function loadCourseFile(file){
       var validColIndices = [];
       for(var c = 0; c <= maxCol; c++){
         var hasHeader = String(headerRow[c]||'').trim().length > 0;
-        var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim() : ''; });
+        var hasData = dataRowsRaw.some(function(r){ return r[c] != null && String(r[c]).trim().length > 0; });
         if(hasHeader || hasData){
           validColIndices.push(c);
         }
