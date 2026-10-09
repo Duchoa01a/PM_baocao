@@ -1213,7 +1213,22 @@ function loadPersistedSummaryStore(){
     var raw = localStorage.getItem(STORAGE_KEY);
     if(raw){
       var parsed = JSON.parse(raw);
-      if(parsed && Array.isArray(parsed.rows)){
+      if(parsed && Array.isArray(parsed.rows) && Array.isArray(parsed.headers)){
+        // Gộp nếu có 2 cột riêng Khóa và Lớp
+        var kIdx = parsed.headers.findIndex(function(h){ return /^khóa$|^khoá$/i.test(norm(h)); });
+        var lIdx = parsed.headers.findIndex(function(h){ return /^lớp$/i.test(norm(h)); });
+        if(kIdx !== -1 && lIdx !== -1){
+          parsed.rows.forEach(function(row){
+            var k = String(row[kIdx]||'').trim();
+            var l = String(row[lIdx]||'').trim();
+            row[kIdx] = (k && l && k !== l) ? (k + ' - ' + l) : (k || l);
+          });
+          parsed.headers[kIdx] = 'Khóa / Lớp';
+          parsed.headers.splice(lIdx, 1);
+          parsed.rows.forEach(function(row){
+            row.splice(lIdx, 1);
+          });
+        }
         return parsed;
       }
     }
@@ -1473,10 +1488,29 @@ function parseCourseFileSummary(file){
         var classColIdx = summaryStore.headers.findIndex(function(h){ return /khóa\s*\/\s*lớp|khóa|khoá|lớp/i.test(norm(h)); });
         if(classColIdx === -1) classColIdx = 1;
 
-        // Ánh xạ cột từ file nạp vào sang cấu trúc file tổng
+        // Xác định các cột Khóa, Lớp trong file nạp vào để gộp chung 1 cột
+        var fileKhoaCol = -1;
+        var fileLopCol = -1;
+        var fileKhoaLopCol = -1;
+        fileHeaders.forEach(function(fh, fIdx){
+          var normFh = norm(fh);
+          if(/khóa.*lớp|lớp.*khóa/i.test(normFh)){
+            fileKhoaLopCol = fIdx;
+          } else if(/khóa|khoá/i.test(normFh)){
+            fileKhoaCol = fIdx;
+          } else if(/lớp/i.test(normFh)){
+            fileLopCol = fIdx;
+          }
+        });
+
+        // Ánh xạ các cột thông thường từ file nạp vào sang cấu trúc file tổng
         var colMapping = [];
         fileHeaders.forEach(function(fh, fIdx){
           var normFh = norm(fh);
+          if(fIdx === fileKhoaCol || fIdx === fileLopCol || fIdx === fileKhoaLopCol){
+            colMapping[fIdx] = -1; // Xử lý riêng vào cột Khóa / Lớp duy nhất
+            return;
+          }
           var matchedIdx = summaryStore.headers.findIndex(function(ch){ return norm(ch) === normFh; });
           
           if(matchedIdx === -1){
@@ -1496,8 +1530,6 @@ function parseCourseFileSummary(file){
               matchedIdx = summaryStore.headers.findIndex(function(h){ return /số\s*đt|sđt|điện\s*thoại/i.test(norm(h)); });
             } else if(/địa\s*chỉ|nơi\s*cư\s*trú/i.test(normFh)){
               matchedIdx = summaryStore.headers.findIndex(function(h){ return /địa\s*chỉ/i.test(norm(h)); });
-            } else if(/khóa|khoá|lớp/i.test(normFh)){
-              matchedIdx = classColIdx;
             }
           }
           colMapping[fIdx] = matchedIdx;
@@ -1518,9 +1550,30 @@ function parseCourseFileSummary(file){
             }
           });
 
-          // Tự động gán cột Khóa / Lớp
-          if(classColIdx !== -1 && (!newRow[classColIdx] || newRow[classColIdx].trim() === '')){
-            newRow[classColIdx] = fileClassTag;
+          // Gộp chính xác Khóa và Lớp vào chung 1 cột "Khóa / Lớp"
+          var combinedClassVal = '';
+          if(fileKhoaLopCol !== -1 && r[fileKhoaLopCol]){
+            combinedClassVal = String(r[fileKhoaLopCol]).trim();
+          } else if(fileKhoaCol !== -1 && fileLopCol !== -1){
+            var k = String(r[fileKhoaCol]||'').trim();
+            var l = String(r[fileLopCol]||'').trim();
+            if(k && l){
+              combinedClassVal = (k.toLowerCase() === l.toLowerCase()) ? k : (k + ' - ' + l);
+            } else {
+              combinedClassVal = k || l;
+            }
+          } else if(fileKhoaCol !== -1 && r[fileKhoaCol]){
+            combinedClassVal = String(r[fileKhoaCol]).trim();
+          } else if(fileLopCol !== -1 && r[fileLopCol]){
+            combinedClassVal = String(r[fileLopCol]).trim();
+          }
+
+          if(!combinedClassVal){
+            combinedClassVal = fileClassTag;
+          }
+
+          if(classColIdx !== -1){
+            newRow[classColIdx] = combinedClassVal;
           }
 
           var key = getStudentKey(newRow, summaryStore.headers);
